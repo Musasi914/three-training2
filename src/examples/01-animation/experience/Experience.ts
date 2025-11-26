@@ -70,6 +70,7 @@ export default class Experience {
   private resize() {
     this.config = this.setConfig();
     this.camera.resize();
+    this.renderer.resize();
   }
 
   private update() {
