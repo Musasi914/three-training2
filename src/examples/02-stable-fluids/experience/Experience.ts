@@ -1,9 +1,9 @@
-import { Camera } from "./Camera";
-import { Renderer } from "./Renderer";
+import { Camera } from "./base/Camera";
+import { Renderer } from "./base/Renderer";
 import { Size } from "@shared/utils/Size";
 import { Time } from "@shared/utils/Time";
 import * as THREE from "three";
-import { World } from "./World";
+import { World } from "./world/World";
 import { GUI } from "lil-gui";
 import Stats from "three/examples/jsm/libs/stats.module.js";
 
@@ -14,11 +14,6 @@ export default class Experience {
   }
 
   canvasWrapper: HTMLDivElement;
-  config: {
-    width: number;
-    height: number;
-    pixelRatio: number;
-  };
   size: Size;
   time: Time;
   gui: GUI;
@@ -27,18 +22,20 @@ export default class Experience {
   camera: Camera;
   renderer: Renderer;
   world: World;
+  config: {
+    width: number;
+    height: number;
+    pixelRatio: number;
+  };
 
   constructor(canvasWrapper: HTMLDivElement) {
-    // 既にインスタンスが存在する場合は破棄（ホットリロード対応）
-    if (Experience.instance) {
-      Experience.instance.dispose();
-    }
-    
     Experience.instance = this;
     this.canvasWrapper = canvasWrapper;
 
     this.size = new Size();
+
     this.time = new Time();
+
     this.gui = new GUI();
     this.stats = new Stats();
     this.stats.showPanel(0);
@@ -50,6 +47,7 @@ export default class Experience {
     this.camera = new Camera();
     this.renderer = new Renderer();
 
+    // this.enviroment = new Environment();
     this.world = new World();
 
     this.size.on("resize", this.resize.bind(this));
@@ -67,27 +65,12 @@ export default class Experience {
 
   private resize() {
     this.config = this.setConfig();
-
     this.camera.resize();
     this.renderer.resize();
   }
 
   private update() {
-    this.camera.update();
-    this.renderer.update();
-    this.world.update();
     this.stats.update();
-  }
-
-  dispose() {
-    // クリーンアップ処理
-    this.size.off("resize");
-    this.time.off("tick");
-    this.renderer.instance.dispose();
-    this.gui.destroy();
-    if (this.stats.dom.parentNode) {
-      this.stats.dom.parentNode.removeChild(this.stats.dom);
-    }
+    this.world.update();
   }
 }
-

@@ -6,7 +6,6 @@ import { examples } from "./main";
 export class Router {
   // init()メソッド：Routerを初期化して動作を開始するメソッド
   init() {
-    console.log("first");
     // ページが読み込まれた時に、現在のURLを確認して適切なページを表示
     this.handleRoute();
 

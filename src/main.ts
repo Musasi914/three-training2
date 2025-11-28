@@ -13,14 +13,14 @@ export const examples: ExampleInfo[] = [
   {
     id: "01-animation",
     name: "01. Animation",
-    description: "基本的なアニメーションの例",
+    description: "モデルとアニメーション",
     path: "/src/examples/01-animation/index.html",
   },
   {
-    id: "02-sphereanimation",
-    name: "02. Sphere Animation",
-    description: "球体のアニメーション例",
-    path: "/src/examples/02-sphereanimation/index.html",
+    id: "02-stable-fluids",
+    name: "02. Stable Fluids",
+    description: "流体",
+    path: "/src/examples/02-stable-fluids/index.html",
   },
 ];
 

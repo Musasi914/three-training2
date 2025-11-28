@@ -1,9 +1,11 @@
-import "../../style.css";
-import Experience from "./Experience";
+import Experience from "./experience/Experience";
 
 // 一度だけ実行されるようにする
-if (typeof window !== "undefined" && !(window as any).__02_SPHEREANIMATION_INITIALIZED__) {
-  (window as any).__02_SPHEREANIMATION_INITIALIZED__ = true;
+if (
+  typeof window !== "undefined" &&
+  !(window as any).__01_ANIMATION_INITIALIZED__
+) {
+  (window as any).__01_ANIMATION_INITIALIZED__ = true;
 
   const canvasWrapper = document.querySelector(
     "#canvasWrapper"
@@ -15,4 +17,3 @@ if (typeof window !== "undefined" && !(window as any).__02_SPHEREANIMATION_INITI
 
   new Experience(canvasWrapper);
 }
-

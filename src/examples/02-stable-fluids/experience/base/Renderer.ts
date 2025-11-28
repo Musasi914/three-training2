@@ -1,4 +1,4 @@
-import Experience from "./Experience";
+import Experience from "../Experience";
 import * as THREE from "three";
 
 export class Renderer {
@@ -16,19 +16,13 @@ export class Renderer {
   }
 
   private setInstance() {
-    // 既存のcanvasを削除（ホットリロード対応）
-    const existingCanvas = this.canvasWrapper.querySelector("canvas");
-    if (existingCanvas) {
-      existingCanvas.remove();
-    }
-
     const renderer = new THREE.WebGLRenderer({
       alpha: false,
       antialias: this.config.pixelRatio === 1,
     });
 
     this.canvasWrapper.appendChild(renderer.domElement);
-    renderer.setClearColor(0x1a1a1a, 1); // より暗い背景色
+    renderer.setClearColor(0x242424, 1);
     renderer.setPixelRatio(this.config.pixelRatio);
     renderer.setSize(this.config.width, this.config.height);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -42,12 +36,4 @@ export class Renderer {
     this.instance.setPixelRatio(this.config.pixelRatio);
     this.instance.setSize(this.config.width, this.config.height);
   }
-
-  update() {
-    this.instance.render(
-      this.experience.scene,
-      this.experience.camera.instance
-    );
-  }
 }
-
