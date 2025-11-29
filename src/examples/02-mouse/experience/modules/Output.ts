@@ -22,9 +22,9 @@ export default class Output {
         vertexShader: face_vert,
         fragmentShader: color_frag,
         uniforms: {
-          // velocity: {
-          // value:
-          // }
+          velocity: {
+            value: this.simulation.fbos.vel_1.texture,
+          },
           boundarySpace: {
             value: new THREE.Vector2(),
           },

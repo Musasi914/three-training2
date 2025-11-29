@@ -17,10 +17,16 @@ export const examples: ExampleInfo[] = [
     path: "/src/examples/01-animation/index.html",
   },
   {
-    id: "02-stable-fluids",
-    name: "02. Stable Fluids",
+    id: "02-mouse",
+    name: "02. Mouse",
+    description: "マウス",
+    path: "/src/examples/02-mouse/index.html",
+  },
+  {
+    id: "03-stable-fluids",
+    name: "03. Stable Fluids",
     description: "流体",
-    path: "/src/examples/02-stable-fluids/index.html",
+    path: "/src/examples/03-stable-fluids/index.html",
   },
 ];
 

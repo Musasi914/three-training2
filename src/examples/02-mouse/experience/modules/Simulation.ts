@@ -41,7 +41,7 @@ export default class Simulation {
     mouse_force: 20,
     resolution: 0.5,
     /** 単位はセル。100セル分ってこと */
-    cursor_size: 50,
+    cursor_size: 100,
     viscous: 30,
     isBounce: false,
     dt: 0.014,
@@ -92,12 +92,20 @@ export default class Simulation {
       vel_1: new THREE.WebGLRenderTarget(this.fboSize.x, this.fboSize.y, {
         type: THREE.FloatType,
       }),
-      vel_viscous0: new THREE.WebGLRenderTarget(this.fboSize.x, this.fboSize.y, {
-        type: THREE.FloatType,
-      }),
-      vel_viscous1: new THREE.WebGLRenderTarget(this.fboSize.x, this.fboSize.y, {
-        type: THREE.FloatType,
-      }),
+      vel_viscous0: new THREE.WebGLRenderTarget(
+        this.fboSize.x,
+        this.fboSize.y,
+        {
+          type: THREE.FloatType,
+        }
+      ),
+      vel_viscous1: new THREE.WebGLRenderTarget(
+        this.fboSize.x,
+        this.fboSize.y,
+        {
+          type: THREE.FloatType,
+        }
+      ),
       divergence: new THREE.WebGLRenderTarget(this.fboSize.x, this.fboSize.y, {
         type: THREE.FloatType,
       }),
