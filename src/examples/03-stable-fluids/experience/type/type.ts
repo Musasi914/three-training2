@@ -2,7 +2,7 @@ import * as THREE from "three";
 
 export type Props = {
   cellScale?: THREE.Vector2;
-  cursorSize: number;
+  cursorSize?: number;
   fboSize?: THREE.Vector2;
   boundarySpace?: THREE.Vector2;
   viscos?: number;
@@ -10,6 +10,8 @@ export type Props = {
   src?: THREE.WebGLRenderTarget;
   dst: THREE.WebGLRenderTarget;
   dst_?: THREE.WebGLRenderTarget;
+  src_p?: THREE.WebGLRenderTarget;
+  src_v?: THREE.WebGLRenderTarget;
 };
 
 export type ShaderPassProps = {

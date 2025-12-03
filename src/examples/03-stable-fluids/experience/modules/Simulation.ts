@@ -1,6 +1,10 @@
 import * as THREE from "three";
 import Experience from "../Experience";
 import ExternalForce from "./ExternalForce";
+import Advection from "./Advection";
+import Divergence from "./Divergence";
+import Poisson from "./Poisson";
+import Pressure from "./Pressure";
 
 type FBOType = {
   // 速度
@@ -41,15 +45,20 @@ export default class Simulation {
     mouse_force: 20,
     resolution: 0.5,
     /** 単位はセル。50セル分ってこと */
-    cursor_size: 50,
+    cursor_size: 100,
     viscous: 30,
     isBounce: false,
     dt: 0.014,
     isViscous: false,
-    BFECC: true,
+    BFECC: false,
   };
 
   externalForce: ExternalForce | null = null;
+  advection: Advection | null = null;
+  divergence: Divergence | null = null;
+  boundarySpace: THREE.Vector2;
+  poisson: Poisson | null = null;
+  pressure: Pressure | null = null;
 
   constructor() {
     this.experience = Experience.getInstance();
@@ -67,6 +76,8 @@ export default class Simulation {
       this.fboSize,
       this.fbos
     );
+
+    this.boundarySpace = new THREE.Vector2(0, 0);
 
     this.createShaderPass();
   }
@@ -136,9 +147,77 @@ export default class Simulation {
       cursorSize: this.options.cursor_size,
       dst: this.fbos.vel_1,
     });
+
+    this.advection = new Advection({
+      cellScale: this.cellScale,
+      fboSize: this.fboSize,
+      dt: this.options.dt,
+      src: this.fbos.vel_0,
+      dst: this.fbos.vel_1,
+    });
+
+    this.divergence = new Divergence({
+      cellScale: this.cellScale,
+      boundarySpace: this.boundarySpace,
+      src: this.fbos.vel_1,
+      dst: this.fbos.divergence,
+      dt: this.options.dt,
+    });
+
+    this.poisson = new Poisson({
+      cellScale: this.cellScale,
+      boundarySpace: this.boundarySpace,
+      src: this.fbos.divergence,
+      dst: this.fbos.pressure_1,
+      dst_: this.fbos.pressure_0,
+    });
+
+    this.pressure = new Pressure({
+      cellScale: this.cellScale,
+      boundarySpace: this.boundarySpace,
+      src_p: this.fbos.pressure_0,
+      src_v: this.fbos.vel_1,
+      dst: this.fbos.vel_0,
+      dt: this.options.dt,
+    });
+
+    // iOSデバイス検出（iPhone/iPad/iPodを網羅）
+    // iPadOS 13以降のiPadは「MacIntel」として報告される場合があるため、
+    // maxTouchPointsも確認して確実に検出する
+    const isIOS =
+      /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    console.log(navigator);
+    document.body.appendChild(document.createElement("div")).innerHTML =
+      navigator.userAgent;
   }
 
   update() {
-    this.externalForce?.render();
+    if (this.options.isBounce) {
+      this.boundarySpace.set(0, 0);
+    } else {
+      this.boundarySpace.copy(this.cellScale);
+    }
+
+    // 1. 移流: vel_0を読み込んでvel_1に書き込む
+    this.advection?.update({
+      dt: this.options.dt,
+      isBounce: this.options.isBounce,
+      BFECC: this.options.BFECC,
+    });
+    // 2. 外部力: vel_1に加算（加算ブレンディング）
+    this.externalForce?.render({
+      cursor_size: this.options.cursor_size,
+      mouse_force: this.options.mouse_force,
+      cellScale: this.cellScale,
+    });
+    // 3. 発散の計算: vel_1を読み込む
+    this.divergence?.render({ vel: this.fbos.vel_1 });
+    const pressure = this.poisson?.render({
+      iterations: this.options.iterations_poisson,
+    });
+
+    if (!pressure) return;
+    this.pressure?.render({ vel: this.fbos.vel_1, pressure });
   }
 }

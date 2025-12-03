@@ -12,7 +12,7 @@ export class Camera {
   experience: Experience;
   scene: Experience["scene"];
   config: Experience["config"];
-  controls: OrbitControls;
+  // controls: OrbitControls;
   // controls: MapControls;
 
   constructor() {
@@ -21,7 +21,7 @@ export class Camera {
     this.config = this.experience.config;
 
     this.instance = this.setInstance();
-    this.controls = this.setOrbitControls();
+    // this.controls = this.setOrbitControls();
   }
 
   private setInstance() {

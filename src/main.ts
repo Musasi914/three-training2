@@ -28,6 +28,24 @@ export const examples: ExampleInfo[] = [
     description: "流体",
     path: "/src/examples/03-stable-fluids/index.html",
   },
+  {
+    id: "04-galaxy",
+    name: "04. Galaxy",
+    description: "銀河",
+    path: "/src/examples/04-galaxy/index.html",
+  },
+  {
+    id: "05-woman-sphere",
+    name: "05. Woman Sphere",
+    description: "球体をもつ女性",
+    path: "/src/examples/05-woman-sphere/index.html",
+  },
+  {
+    id: "06-glsl-practice",
+    name: "06. shader patterns",
+    description: "GLSL Practice with Plane",
+    path: "/src/examples/06-glsl-practice/index.html",
+  },
 ];
 
 // ルーターの初期化（トップページのみ）

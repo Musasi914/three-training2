@@ -35,5 +35,9 @@ export class Renderer {
     this.config = this.experience.config;
     this.instance.setPixelRatio(this.config.pixelRatio);
     this.instance.setSize(this.config.width, this.config.height);
+    this.instance.render(
+      this.experience.scene,
+      this.experience.camera.instance
+    );
   }
 }

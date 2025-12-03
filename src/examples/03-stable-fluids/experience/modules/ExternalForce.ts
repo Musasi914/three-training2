@@ -26,8 +26,6 @@ import Mouse from "./Mouse";
  * フラグメントシェーダーで中心から距離に応じた減衰を適用（滑らかに）
  */
 
-
-
 export default class ExternalForce extends ShaderPass {
   mouseMesh!: THREE.Mesh;
   mouse: Mouse;
@@ -71,45 +69,40 @@ export default class ExternalForce extends ShaderPass {
     this.scene.add(this.mouseMesh);
   }
 
-  render() {
-    if (!this.props.cellScale) return;
+  render({
+    cursor_size,
+    mouse_force,
+    cellScale,
+  }: {
+    cursor_size: number;
+    mouse_force: number;
+    cellScale: THREE.Vector2;
+  }) {
+    if (!cellScale || !cursor_size) return;
 
-    const forceX = this.mouse.diff.x * 10;
-    const forceY = this.mouse.diff.y * 10;
+    const forceX = (this.mouse.diff.x / 2) * mouse_force;
+    const forceY = (this.mouse.diff.y / 2) * mouse_force;
 
     // 正規化されたカーソルの大きさ
-    const cursorSizeX =
-      this.props.cursorSize *
-      this.props.cellScale.x;
+    const cursorSizeX = cursor_size * cellScale.x;
 
-    const cursorSizeY =
-      this.props.cursorSize *
-      this.props.cellScale.y;
+    const cursorSizeY = cursor_size * cellScale.y;
 
     const centerX = Math.min(
-      Math.max(
-        this.mouse.coords.x,
-        -1 + cursorSizeX + this.props.cellScale.x * 2
-      ),
-      1 - cursorSizeX - this.props.cellScale.x * 2
+      Math.max(this.mouse.coords.x, -1 + cursorSizeX + cellScale.x * 2),
+      1 - cursorSizeX - cellScale.x * 2
     );
 
     const centerY = Math.min(
-      Math.max(
-        this.mouse.coords.y,
-        -1 + cursorSizeY + this.props.cellScale.y * 2
-      ),
-      1 - cursorSizeY - this.props.cellScale.y * 2
+      Math.max(this.mouse.coords.y, -1 + cursorSizeY + cellScale.y * 2),
+      1 - cursorSizeY - cellScale.y * 2
     );
 
     const uniforms = (this.mouseMesh.material as THREE.ShaderMaterial).uniforms;
 
     uniforms.force.value.set(forceX, forceY);
     uniforms.center.value.set(centerX, centerY);
-    uniforms.scale.value.set(
-      this.props.cursorSize,
-      this.props.cursorSize
-    );
+    uniforms.scale.value.set(cursor_size, cursor_size);
 
     super.update();
   }

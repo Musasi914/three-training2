@@ -1,3 +1,4 @@
+precision highp float;
 uniform vec2 center;
 uniform vec2 scale;
 uniform vec2 px;

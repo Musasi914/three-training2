@@ -22,9 +22,9 @@ export default class Output {
         vertexShader: face_vert,
         fragmentShader: color_frag,
         uniforms: {
-          // velocity: {
-          //   value: this.simulation.fbos.vel_1.texture,
-          // },
+          velocity: {
+            value: this.simulation.fbos.vel_0.texture,
+          },
           boundarySpace: {
             value: new THREE.Vector2(),
           },
@@ -35,11 +35,11 @@ export default class Output {
   }
 
   update() {
+    this.simulation.update();
+    this.experience.renderer.instance.setRenderTarget(null);
     this.experience.renderer.instance.render(
       this.experience.scene,
       this.experience.camera.instance
     );
-
-    this.simulation.update();
   }
 }
