@@ -19,20 +19,11 @@ float drawBubble(vec2 uv, vec2 bubblePos, float size, float time) {
   // 泡の円形パターン（外側が透明、内側が不透明）
   float bubble = 1.0 - smoothstep(size * 0.3, size, d);
   
-  // 泡のハイライト（上部に光の反射）
-  vec2 highlightPos = bubblePos + vec2(size * 0.15, size * 0.15);
-  float highlightDist = length(uv - highlightPos);
-  float highlight = 1.0 - smoothstep(0.0, size * 0.2, highlightDist);
-  
-  // 泡の輪郭（縁が少し濃い）
-  float edge = 1.0 - smoothstep(size * 0.8, size, d);
-  edge *= 0.3;
-  
-  return bubble + highlight * 0.5 + edge;
+  return bubble;
 }
 
 void main() {
-  vec3 color = mix(uDepthColor, uSurfaceColor, (vElevation + 0.08) * 2.);
+  vec3 color = mix(uDepthColor, uSurfaceColor, (vElevation + 0.2) * 2.0);
   
   // 泡の描画
   vec3 bubbleColor = vec3(1.0); // 白い泡
@@ -44,24 +35,24 @@ void main() {
   
   for (float i = -1.0; i <= 1.0; i++) {
     for (float j = -1.0; j <= 1.0; j++) {
-      vec2 cell = bubbleGrid + vec2(i, j);
+      vec2 cell = bubbleGrid + vec2(i, j); //[-1, 5]
       float cellRandom = random(cell);
       
       // 泡が存在するかどうか（確率的に）
-      if (cellRandom > 0.7) {
+      if (cellRandom > 0.4) {
         vec2 bubblePos = cell + vec2(0.5) + (random(cell + vec2(1.0)) - 0.5) * 0.3;
-        bubblePos /= bubbleScale;
+        bubblePos /= bubbleScale; //[-0.13, 1.13]
         
         // 時間とともに泡が上に移動
         bubblePos.y -= uTime * 0.1 * cellRandom;
-        bubblePos.y = mod(bubblePos.y + 1.0, 1.0); // ループ
+        bubblePos.y = mod(bubblePos.y , 1.0); // ループ
         
         // 泡のサイズ（ランダム）
-        float bubbleSize = 0.02 + random(cell + vec2(2.0)) * 0.03;
+        float bubbleSize = 0.02 + random(cell + vec2(2.0)) * 0.03; //[0.02, 0.05]
         
         // 泡の透明度（波の高さに応じて）
         float bubbleAlpha = drawBubble(vUv, bubblePos, bubbleSize, uTime);
-        bubbleAlpha *= smoothstep(-0.05, 0.05, vElevation); // 波の表面付近にのみ表示
+        // bubbleAlpha *= smoothstep(-0.05, 0.05, vElevation); // 波の表面付近にのみ表示
         
         bubbleMask = max(bubbleMask, bubbleAlpha);
       }
