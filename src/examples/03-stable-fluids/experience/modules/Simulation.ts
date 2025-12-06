@@ -184,12 +184,12 @@ export default class Simulation {
     // iOSデバイス検出（iPhone/iPad/iPodを網羅）
     // iPadOS 13以降のiPadは「MacIntel」として報告される場合があるため、
     // maxTouchPointsも確認して確実に検出する
-    const isIOS =
-      /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-    console.log(navigator);
-    document.body.appendChild(document.createElement("div")).innerHTML =
-      navigator.userAgent;
+    // const isIOS =
+    //   /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    //   (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    // console.log(navigator);
+    // document.body.appendChild(document.createElement("div")).innerHTML =
+    //   navigator.userAgent;
   }
 
   update() {

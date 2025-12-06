@@ -6,7 +6,6 @@ export class Time extends EventEmitter {
   elapsed: number;
   delta: number;
   isActive: boolean;
-  private rafId: number | null;
 
   constructor() {
     super();
@@ -16,7 +15,6 @@ export class Time extends EventEmitter {
     this.elapsed = 0;
     this.delta = 16 / 1000;
     this.isActive = true;
-    this.rafId = null;
 
     this.setupVisibilityListeners();
     this.tick();
@@ -55,7 +53,7 @@ export class Time extends EventEmitter {
   }
 
   private tick() {
-    this.rafId = window.requestAnimationFrame(this.tick.bind(this));
+    window.requestAnimationFrame(this.tick.bind(this));
 
     // ウィンドウが非アクティブな場合はtickイベントを発火しない
     if (!this.isActive) {

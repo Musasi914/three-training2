@@ -42,9 +42,15 @@ export const examples: ExampleInfo[] = [
   },
   {
     id: "06-glsl-practice",
-    name: "06. shader patterns",
+    name: "06. GLSL Practice with Plane",
     description: "GLSL Practice with Plane",
     path: "/src/examples/06-glsl-practice/index.html",
+  },
+  {
+    id: "07-wave",
+    name: "07. Wave",
+    description: "Wave",
+    path: "/src/examples/07-wave/index.html",
   },
 ];
 
