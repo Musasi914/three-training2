@@ -58,6 +58,18 @@ export const examples: ExampleInfo[] = [
     description: "Light Shading",
     path: "/src/examples/08-light-shading/index.html",
   },
+  {
+    id: "09-wave-improved",
+    name: "09. Wave Improved",
+    description: "Wave Improved",
+    path: "/src/examples/09-wave-improve/index.html",
+  },
+  {
+    id: "10-wave-improved2",
+    name: "10. Wave Improved2",
+    description: "Wave Improved2",
+    path: "/src/examples/10-wave-improve2/index.html",
+  },
 ];
 
 // ルーターの初期化（トップページのみ）
