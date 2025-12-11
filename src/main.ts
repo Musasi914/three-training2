@@ -43,7 +43,7 @@ export const examples: ExampleInfo[] = [
   {
     id: "06-glsl-practice",
     name: "06. GLSL Practice with Plane",
-    description: "GLSL Practice with Plane",
+    description: "シェーダーの練習。planeに色々glsl関数使って描画",
     path: "/src/examples/06-glsl-practice/index.html",
   },
   {
@@ -55,21 +55,35 @@ export const examples: ExampleInfo[] = [
   {
     id: "08-light-shading",
     name: "08. Light Shading",
-    description: "Light Shading",
+    description: "シェーダーでライト",
     path: "/src/examples/08-light-shading/index.html",
   },
   {
     id: "09-wave-improved",
     name: "09. Wave Improved",
-    description: "Wave Improved",
+    description: "waveパターン。背景に面白そう",
     path: "/src/examples/09-wave-improve/index.html",
   },
   {
     id: "10-wave-improved2",
     name: "10. Wave Improved2",
-    description: "Wave Improved2",
+    description: "Waveパターン",
     path: "/src/examples/10-wave-improve2/index.html",
   },
+  {
+    id: "11-material-overload",
+    name: "11. Material Overload",
+    description:
+      "onBeforeCompileでの書き換えと、depthShaderMaterialでの影の更新",
+    path: "/src/examples/11-material-overload/index.html",
+  },
+  {
+    id: "12-material-overload2",
+    name: "12. Material Overload2",
+    description:
+      "onBeforeCompileでの書き換えと、depthShaderMaterialでの影の更新",
+    path: "/src/examples/12-material-overload-play/index.html",
+  }
 ];
 
 // ルーターの初期化（トップページのみ）
