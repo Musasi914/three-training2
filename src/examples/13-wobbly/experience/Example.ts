@@ -14,6 +14,13 @@ export default class Example {
     this.resource = this.experience.resource;
 
     this.setEnvMap();
+
+    this.scene.add(
+      new THREE.Mesh(
+        new THREE.PlaneGeometry(10, 10),
+        new THREE.MeshStandardMaterial()
+      )
+    );
   }
 
   private setEnvMap() {
