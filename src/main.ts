@@ -83,7 +83,13 @@ export const examples: ExampleInfo[] = [
     description:
       "onBeforeCompileでの書き換えと、depthShaderMaterialでの影の更新",
     path: "/src/examples/12-material-overload-play/index.html",
-  }
+  },
+  {
+    id: "13-wobbly",
+    name: "13. Wobbly",
+    description: "Wobbly",
+    path: "/src/examples/13-wobbly/index.html",
+  },
 ];
 
 // ルーターの初期化（トップページのみ）

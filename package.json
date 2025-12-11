@@ -19,6 +19,7 @@
     "glob": "^13.0.0",
     "gsap": "^3.13.0",
     "three": "^0.180.0",
+    "three-custom-shader-material": "^6.4.0",
     "vite-plugin-glsl": "^1.5.5"
   }
 }
