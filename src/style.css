@@ -52,6 +52,8 @@ body {
   padding: 1.5rem;
   transition: transform 0.2s, box-shadow 0.2s;
   cursor: pointer;
+  text-decoration: none;
+  color: inherit;
 }
 
 .example-card:hover {
