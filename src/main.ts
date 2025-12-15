@@ -90,6 +90,12 @@ export const examples: ExampleInfo[] = [
     description: "Wobbly",
     path: "/src/examples/13-wobbly/index.html",
   },
+  {
+    id: "14-firework",
+    name: "14. Firework",
+    description: "Firework",
+    path: "/src/examples/14-firework/index.html",
+  },
 ];
 
 // ルーターの初期化（トップページのみ）

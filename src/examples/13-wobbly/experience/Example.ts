@@ -3,7 +3,7 @@ import * as THREE from "three";
 import CustomShaderMaterial from "three-custom-shader-material/vanilla";
 import vertexShader from "./glsl/sphere.vert";
 import fragmentShader from "./glsl/sphere.frag";
-import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
+import * as BufferGeometryUtils from "three/addons/utils/BufferGeometryUtils.js";
 
 export default class Example {
   experience: Experience;
@@ -25,7 +25,7 @@ export default class Example {
   };
   uniforms = {
     uTime: new THREE.Uniform(0),
-    
+
     uPositionFrequency: new THREE.Uniform(0.5),
     uTimeFrequency: new THREE.Uniform(0.4),
     uStrength: new THREE.Uniform(0.3),
@@ -36,7 +36,7 @@ export default class Example {
 
     uColorA: new THREE.Uniform(new THREE.Color(0xff0000)),
     uColorB: new THREE.Uniform(new THREE.Color(0x0000ff)),
-  }
+  };
   constructor() {
     this.experience = Experience.getInstance();
     this.scene = this.experience.scene;
@@ -72,13 +72,15 @@ export default class Example {
     this.sphere = new THREE.Mesh(sphereGeometry, this.sphereMaterial);
 
     // console.log(this.sphere.geometry.computeTangents())
-    
+
     this.sphere.castShadow = true;
     this.scene.add(this.sphere);
   }
 
   private computeTangents() {
-    this.sphere.geometry = BufferGeometryUtils.mergeVertices(this.sphere.geometry);
+    this.sphere.geometry = BufferGeometryUtils.mergeVertices(
+      this.sphere.geometry
+    );
     this.sphere.geometry.computeTangents();
   }
 
@@ -156,37 +158,43 @@ export default class Example {
         material.thickness = value;
       });
 
-    this.gui.add(this.uniforms.uPositionFrequency, "value")
+    this.gui
+      .add(this.uniforms.uPositionFrequency, "value")
       .name("Position Frequency")
       .min(0)
       .max(1)
       .step(0.01);
 
-    this.gui.add(this.uniforms.uTimeFrequency, "value")
+    this.gui
+      .add(this.uniforms.uTimeFrequency, "value")
       .name("Time Frequency")
       .min(0)
       .max(1)
       .step(0.01);
 
-    this.gui.add(this.uniforms.uStrength, "value")
+    this.gui
+      .add(this.uniforms.uStrength, "value")
       .name("Strength")
       .min(0)
       .max(1.6)
       .step(0.01);
 
-    this.gui.add(this.uniforms.uWarpPositionFrequency, "value")
+    this.gui
+      .add(this.uniforms.uWarpPositionFrequency, "value")
       .name("Warp Position Frequency")
       .min(0)
       .max(1)
       .step(0.01);
 
-    this.gui.add(this.uniforms.uWarpTimeFrequency, "value")
+    this.gui
+      .add(this.uniforms.uWarpTimeFrequency, "value")
       .name("Warp Time Frequency")
       .min(0)
       .max(1)
       .step(0.01);
 
-    this.gui.add(this.uniforms.uWarpStrength, "value")
+    this.gui
+      .add(this.uniforms.uWarpStrength, "value")
       .name("Warp Strength")
       .min(0)
       .max(1.6)
