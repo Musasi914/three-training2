@@ -12,7 +12,7 @@ export type ExampleInfo = {
 export const examples: ExampleInfo[] = [
   {
     id: "01-animation",
-    name: "01. Animation",
+    name: "01. mixamoアニメーション",
     description: "モデルとアニメーション",
     path: "/src/examples/01-animation/index.html",
   },
@@ -30,7 +30,7 @@ export const examples: ExampleInfo[] = [
   },
   {
     id: "04-galaxy",
-    name: "04. Galaxy",
+    name: "04. 銀河",
     description: "銀河",
     path: "/src/examples/04-galaxy/index.html",
   },
@@ -48,7 +48,7 @@ export const examples: ExampleInfo[] = [
   },
   {
     id: "07-wave",
-    name: "07. Wave",
+    name: "07. 波",
     description: "Wave",
     path: "/src/examples/07-wave/index.html",
   },
@@ -60,13 +60,13 @@ export const examples: ExampleInfo[] = [
   },
   {
     id: "09-wave-improved",
-    name: "09. Wave Improved",
+    name: "09. 波パターン",
     description: "waveパターン。背景に面白そう",
     path: "/src/examples/09-wave-improve/index.html",
   },
   {
     id: "10-wave-improved2",
-    name: "10. Wave Improved2",
+    name: "10. 波パターン2",
     description: "Waveパターン",
     path: "/src/examples/10-wave-improve2/index.html",
   },
@@ -86,15 +86,21 @@ export const examples: ExampleInfo[] = [
   },
   {
     id: "13-wobbly",
-    name: "13. Wobbly",
+    name: "13. ぐにゃぐにゃ球体",
     description: "Wobbly",
     path: "/src/examples/13-wobbly/index.html",
   },
   {
     id: "14-firework",
-    name: "14. Firework",
+    name: "14. 花火",
     description: "Firework",
     path: "/src/examples/14-firework/index.html",
+  },
+  {
+    id: "15-earth",
+    name: "15. 地球",
+    description: "Earth",
+    path: "/src/examples/15-earth/index.html",
   },
 ];
 
