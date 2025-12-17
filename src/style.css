@@ -50,14 +50,13 @@ body {
   border: 1px solid #333;
   border-radius: 8px;
   padding: 1.5rem;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: box-shadow 0.2s;
   cursor: pointer;
   text-decoration: none;
   color: inherit;
 }
 
 .example-card:hover {
-  transform: translateY(-4px);
   box-shadow: 0 4px 12px rgba(100, 108, 255, 0.3);
   border-color: #646cff;
 }
