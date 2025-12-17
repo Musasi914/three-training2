@@ -2,8 +2,6 @@ import Experience from "./Experience";
 import * as THREE from "three";
 import vertexShader from "./glsl/earth.vert";
 import fragmentShader from "./glsl/earth.frag";
-import atmosphereVertexShader from "./glsl/atmosphere.vert";
-import atmosphereFragmentShader from "./glsl/atmosphere.frag";
 
 export default class Example {
   experience: Experience;
@@ -13,28 +11,17 @@ export default class Example {
   material: THREE.ShaderMaterial | null = null;
 
   sunPosition: THREE.Vector3;
-  earthGeometry!: THREE.SphereGeometry;
-  earthMaterial!: THREE.ShaderMaterial;
   earth!: THREE.Mesh;
-  earthParameters: {
-    atmosphereDayColor: THREE.Color;
-    atmosphereTwilightColor: THREE.Color;
-  };
+
   constructor() {
     this.experience = Experience.getInstance();
     this.scene = this.experience.scene;
     this.gui = this.experience.gui;
     this.resource = this.experience.resource;
-    
-    this.earthParameters = {
-      atmosphereDayColor: new THREE.Color('#00aaff'),
-      atmosphereTwilightColor: new THREE.Color('#ff6600')
-    }
 
     this.sunPosition = new THREE.Vector3()
     this.createSun();
     this.createEarth();
-    this.createAtmosphere();
   }
 
   private createSun() {
@@ -86,38 +73,19 @@ export default class Example {
     const specularCloudsTexture = this.resource.items.earthSpecularClouds;
     specularCloudsTexture.anisotropy = 8;
 
-    this.earthGeometry = new THREE.SphereGeometry(2, 64, 64);
-    this.earthMaterial = new THREE.ShaderMaterial({
+    const geometry = new THREE.SphereGeometry(2, 64, 64);
+    const material = new THREE.ShaderMaterial({
       vertexShader,
       fragmentShader,
       uniforms: {
         uDayTexture: { value: dayTexture },
         uNightTexture: { value: nightTexture },
         uSpecularCloudsTexture: { value: specularCloudsTexture },
-        uSunDirection: { value: this.sunPosition },
-        uAtmosphereDayColor: { value: this.earthParameters.atmosphereDayColor },
-        uAtmosphereTwilightColor: { value: this.earthParameters.atmosphereTwilightColor }
+        uSunDirection: { value: this.sunPosition }
       },
     });
-    this.earth = new THREE.Mesh(this.earthGeometry, this.earthMaterial);
+    this.earth = new THREE.Mesh(geometry, material);
     this.scene.add(this.earth);
-  }
-
-  private createAtmosphere() {
-    const atmosphereMaterial = new THREE.ShaderMaterial({
-      side: THREE.BackSide,
-      transparent: true,
-      vertexShader: atmosphereVertexShader,
-      fragmentShader: atmosphereFragmentShader,
-      uniforms: {
-        uSunDirection: { value: this.sunPosition },
-        uAtmosphereDayColor: { value: this.earthParameters.atmosphereDayColor },
-        uAtmosphereTwilightColor: { value: this.earthParameters.atmosphereTwilightColor }
-      },
-    });
-    const atmosphere = new THREE.Mesh(this.earthGeometry, atmosphereMaterial);
-    atmosphere.scale.setScalar(1.04);
-    this.scene.add(atmosphere);
   }
 
   update() {
