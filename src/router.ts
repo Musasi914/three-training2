@@ -101,6 +101,18 @@ export const examples: ExampleInfo[] = [
     description: "Earth",
     path: "/src/examples/15-earth/index.html",
   },
+  {
+    id: "16-manual-light",
+    name: "16. カメラのmanual",
+    description: "チュートリアルライト",
+    path: "/src/examples/16-manual-light/index.html",
+  },
+  {
+    id: "17-cursor",
+    name: "17. Cursorアクション",
+    description: "canvas2dを用いてマウス移動でアクションを起こす",
+    path: "/src/examples/17-cursor/index.html",
+  },
 ];
 
 // Routerクラス：ページの遷移（ルーティング）を管理するクラス
@@ -139,7 +151,9 @@ export class Router {
             // ここでは、各例（example）をHTMLのカードに変換している
             .map(
               (example) => `
-            <a href="${example.path}" class="example-card" data-example-id="${example.id}">
+            <a href="${example.path}" class="example-card" data-example-id="${
+                example.id
+              }">
               <h2>${example.name}</h2>
               ${example.description ? `<p>${example.description}</p>` : ""}
             </a>
