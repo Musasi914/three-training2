@@ -113,6 +113,12 @@ export const examples: ExampleInfo[] = [
     description: "canvas2dを用いてマウス移動でアクションを起こす",
     path: "/src/examples/17-cursor/index.html",
   },
+  {
+    id: "18-skinnedmesh",
+    name: "18. SkinnedMesh",
+    description: "SkinnedMeshを使用してモデルを動かす",
+    path: "/src/examples/18-skinnedmesh/index.html",
+  },
 ];
 
 // Routerクラス：ページの遷移（ルーティング）を管理するクラス

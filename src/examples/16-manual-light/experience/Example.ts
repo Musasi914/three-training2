@@ -30,10 +30,10 @@ export default class Example {
     this.view2El = document.querySelector("#view2") as HTMLDivElement;
 
     // view1のカメラを操作できるようにする
-    const controls = new OrbitControls(
-      this.experience.camera.instance,
-      this.view1El
-    );
+    // const controls = new OrbitControls(
+    //   this.experience.camera.instance,
+    //   this.view1El
+    // );
 
     this.createView2Camera();
   }
