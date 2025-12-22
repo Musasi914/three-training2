@@ -119,6 +119,12 @@ export const examples: ExampleInfo[] = [
     description: "SkinnedMeshを使用してモデルを動かす",
     path: "/src/examples/18-skinnedmesh/index.html",
   },
+  {
+    id: "19-land",
+    name: "19. Land",
+    description: "Land",
+    path: "/src/examples/19-land/index.html",
+  },
 ];
 
 // Routerクラス：ページの遷移（ルーティング）を管理するクラス
