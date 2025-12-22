@@ -125,6 +125,12 @@ export const examples: ExampleInfo[] = [
     description: "Land",
     path: "/src/examples/19-land/index.html",
   },
+  {
+    id: "20-transformplane",
+    name: "20. Transform Plane",
+    description: "Transform Plane",
+    path: "/src/examples/20-transformplane/index.html",
+  },
 ];
 
 // Routerクラス：ページの遷移（ルーティング）を管理するクラス

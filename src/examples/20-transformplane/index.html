@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="stylesheet" href="/src/style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>19. land</title>
+    <style>
+      ul,
+      li {
+        list-style: none;
+      }
+      .container {
+        width: 80%;
+        margin-inline: auto;
+        max-width: 1000px;
+        pointer-events: none;
+      }
+      .image-list {
+        width: 800px;
+        margin-inline: auto;
+        padding-block: 180px;
+        & > * + * {
+          margin-top: 180px;
+        }
+      }
+      .image-item {
+        width: 100%;
+        & > img {
+          display: block;
+          width: 800px;
+          height: 500px;
+          object-fit: cover;
+          opacity: 0;
+        }
+      }
+      #canvasWrapper {
+        position: fixed;
+        z-index: -1;
+        inset: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <ul class="image-list">
+        <li class="image-item"><img src="/landscape/a.webp" alt="" /></li>
+        <li class="image-item"><img src="/landscape/a.webp" alt="" /></li>
+        <li class="image-item"><img src="/landscape/a.webp" alt="" /></li>
+        <li class="image-item"><img src="/landscape/a.webp" alt="" /></li>
+      </ul>
+    </div>
+    <div id="canvasWrapper"></div>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>
