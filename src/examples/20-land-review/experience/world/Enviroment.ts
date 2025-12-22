@@ -37,15 +37,20 @@ export class Environment {
     directionalLight.castShadow = true;
     directionalLight.shadow.mapSize.width = 512;
     directionalLight.shadow.mapSize.height = 512;
-    // directionalLight.shadow.camera.near = 1;
-    // directionalLight.shadow.camera.far = 5;
+    directionalLight.shadow.camera.near = 1;
+    directionalLight.shadow.camera.far = 5;
     // directionalLight.shadow.bias = 0.001;
     // directionalLight.shadow.normalBias = 0.001;
-    // directionalLight.shadow.camera.left = -7;
-    // directionalLight.shadow.camera.right = 7;
-    // directionalLight.shadow.camera.top = 7;
-    // directionalLight.shadow.camera.bottom = -7;
+    directionalLight.shadow.camera.left = -7;
+    directionalLight.shadow.camera.right = 7;
+    directionalLight.shadow.camera.top = 7;
+    directionalLight.shadow.camera.bottom = -7;
     this.scene.add(directionalLight);
+
+    const directionalLightHelper = new THREE.DirectionalLightHelper(
+      directionalLight
+    );
+    this.scene.add(directionalLightHelper);
   }
 
   // private setSpotLight() {
