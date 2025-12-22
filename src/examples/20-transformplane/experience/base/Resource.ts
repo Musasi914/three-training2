@@ -54,30 +54,55 @@ export class Resource extends EventEmitter {
     for (const source of this.sources) {
       switch (source.type) {
         case "model":
-          this.loaders.gltfLoader.load(source.path as string, (file) => {
-            this.sourceLoaded(source, file);
-          });
+          if (typeof source.path === "string") {
+            this.loaders.gltfLoader.load(source.path, (file) => {
+              this.sourceLoaded(source, file);
+            });
+          } else {
+            console.error(
+              `Invalid path for model source "${source.name}": expected string, got`,
+              source.path
+            );
+          }
           break;
 
         case "texture":
-          this.loaders.textureLoader.load(source.path as string, (file) => {
-            this.sourceLoaded(source, file);
-          });
+          if (typeof source.path === "string") {
+            this.loaders.textureLoader.load(source.path, (file) => {
+              this.sourceLoaded(source, file);
+            });
+          } else {
+            console.error(
+              `Invalid path for texture source "${source.name}": expected string, got`,
+              source.path
+            );
+          }
           break;
 
         case "cubeTexture":
-          this.loaders.cubeTextureLoader.load(
-            source.path as string[],
-            (file) => {
+          if (Array.isArray(source.path)) {
+            this.loaders.cubeTextureLoader.load(source.path, (file) => {
               this.sourceLoaded(source, file);
-            }
-          );
+            });
+          } else {
+            console.error(
+              `Invalid path for cubeTexture source "${source.name}": expected array, got`,
+              source.path
+            );
+          }
           break;
 
         case "font":
-          this.loaders.fontLoader.load(source.path as string, (file) => {
-            this.sourceLoaded(source, file);
-          });
+          if (typeof source.path === "string") {
+            this.loaders.fontLoader.load(source.path, (file) => {
+              this.sourceLoaded(source, file);
+            });
+          } else {
+            console.error(
+              `Invalid path for font source "${source.name}": expected string, got`,
+              source.path
+            );
+          }
           break;
 
         default:
