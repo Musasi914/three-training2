@@ -4,8 +4,8 @@ import Experience from "../Experience";
 
 export class Camera {
   static FOV = 50;
-  static NEAR = 1;
-  static FAR = 1000;
+  static NEAR = 300;
+  static FAR = 2000;
   instance: THREE.PerspectiveCamera;
   experience: Experience;
   scene: Experience["scene"];
@@ -50,7 +50,9 @@ export class Camera {
     this.instance.updateProjectionMatrix();
 
     const fovRad = (Camera.FOV / 2) * (Math.PI / 180);
-    const distance = this.config.height / 200 / Math.tan(fovRad);
+    const distance = this.config.height / (2 * Math.tan(fovRad));
+
+    console.log(distance);
     this.instance.position.set(0, 0, distance);
   }
 }
