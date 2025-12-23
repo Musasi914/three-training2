@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="stylesheet" href="/src/style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>21. shadow</title>
+    <style>
+      .split {
+        position: absolute;
+        inset: 0;
+        display: flex;
+      }
+      .split > div {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="canvasWrapper"></div>
+    <div class="split">
+      <!-- これらはOrbitControls用で表示用とかではない -->
+      <div id="view1"></div>
+      <div id="view2"></div>
+    </div>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

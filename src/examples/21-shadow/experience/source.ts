@@ -10,4 +10,9 @@ export const sources: Source[] = [
     type: "texture",
     path: "/checker.png",
   },
+  {
+    name: "shadow",
+    type: "texture",
+    path: "/shadow/image.png",
+  },
 ];

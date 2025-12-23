@@ -131,6 +131,12 @@ export const examples: ExampleInfo[] = [
     description: "Transform Plane",
     path: "/src/examples/20-transformplane/index.html",
   },
+  {
+    id: "21-shadow",
+    name: "21. Shadow",
+    description: "three.js manual shadow",
+    path: "/src/examples/21-shadow/index.html",
+  },
 ];
 
 // Routerクラス：ページの遷移（ルーティング）を管理するクラス
