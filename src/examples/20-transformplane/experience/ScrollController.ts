@@ -1,4 +1,4 @@
-export default class Scroll {
+export default class ScrollController {
   targetScrollY: number;
   currentScrollY: number;
   scrollDiff: number;

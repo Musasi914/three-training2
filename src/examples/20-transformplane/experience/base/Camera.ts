@@ -52,7 +52,6 @@ export class Camera {
     const fovRad = (Camera.FOV / 2) * (Math.PI / 180);
     const distance = this.config.height / (2 * Math.tan(fovRad));
 
-    console.log(distance);
     this.instance.position.set(0, 0, distance);
   }
 }

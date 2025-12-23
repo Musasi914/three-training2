@@ -3,7 +3,8 @@ import * as THREE from "three";
 import vertexShader from "./glsl/vert.vert";
 import fragmentShader from "./glsl/frag.frag";
 import ImagePlane from "./ImagePlane";
-import Scroll from "./Scroll";
+import ScrollController from "./ScrollController";
+
 export default class Example {
   experience: Experience;
   scene: Experience["scene"];
@@ -15,14 +16,12 @@ export default class Example {
 
   imagePlanes: ImagePlane[] = [];
 
-  scroll: Scroll;
+  scroll: ScrollController;
   constructor() {
     this.experience = Experience.getInstance();
     this.scene = this.experience.scene;
     this.gui = this.experience.gui;
     this.gui.hide();
-
-    // this.createPlane();
 
     const imageArray = [...document.querySelectorAll("img")];
     for (const imgEl of imageArray) {
@@ -45,7 +44,7 @@ export default class Example {
       this.imagePlanes.push(imagePlane);
     }
 
-    this.scroll = new Scroll();
+    this.scroll = new ScrollController();
   }
 
   resize() {}
