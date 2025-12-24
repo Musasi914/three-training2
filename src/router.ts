@@ -136,6 +136,11 @@ export const examples: ExampleInfo[] = [
     name: "21. Shadow",
     description: "three.js manual shadow",
     path: "/src/examples/21-shadow/index.html",
+  }, {
+    id: "22-morph",
+    name: "22. Morph",
+    description: "Morph",
+    path: "/src/examples/22-morph/index.html",
   },
 ];
 

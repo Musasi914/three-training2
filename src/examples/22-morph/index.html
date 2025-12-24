@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="stylesheet" href="/src/style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>22. Morph</title>
+    <style>
+      .btns {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 10px;
+
+        button {
+          padding: 10px 20px;
+          cursor: pointer;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="canvasWrapper"></div>
+    <div class="btns">
+      <button data-index="0">01</button>
+      <button data-index="1">02</button>
+      <button data-index="2">03</button>
+    </div>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>
