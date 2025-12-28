@@ -1,16 +1,10 @@
-#define PI 3.1415926535897932384626433832795
-
-uniform float uScrollDiff;
 varying vec2 vUv;
-
+uniform float uScrollDiff;
 
 void main() {
-  float frequency = 3.0;
-  float strength = uScrollDiff * -0.001;
-  
   vec3 newPosition = position;
-  newPosition.x += sin(newPosition.y * uScrollDiff * 0.05) * 0.01;
-  newPosition.y += cos(newPosition.x * frequency) * strength;
+  newPosition.y += cos(newPosition.x * 3.0) * uScrollDiff * 0.0005;
+  newPosition.x += sin(newPosition.y * 10.0) * uScrollDiff * 0.0001;
 
   vec4 modelPosition = modelMatrix * vec4(newPosition, 1.0);
   vec4 viewPosition = viewMatrix * modelPosition;

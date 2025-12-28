@@ -1,17 +1,17 @@
 import * as THREE from "three";
 import Experience from "../Experience";
-// import { OrbitControls } from "three/examples/jsm/Addons.js";
+import { OrbitControls } from "three/examples/jsm/Addons.js";
 
 export class Camera {
   static FOV = 75;
-  static NEAR = 1;
-  static FAR = 3000;
-
+  static NEAR = 0.1;
+  static FAR = 100;
+  static CAMERA_POSITION: [number, number, number] = [0, 3, 5];
   instance: THREE.PerspectiveCamera;
   experience: Experience;
   scene: Experience["scene"];
   config: Experience["config"];
-  // controls: OrbitControls;
+  controls: OrbitControls;
   // controls: MapControls;
 
   constructor() {
@@ -20,7 +20,7 @@ export class Camera {
     this.config = this.experience.config;
 
     this.instance = this.setInstance();
-    // this.controls = this.setOrbitControls();
+    this.controls = this.setOrbitControls();
   }
 
   private setInstance() {
@@ -30,27 +30,22 @@ export class Camera {
       Camera.NEAR,
       Camera.FAR
     );
-    const distance =
-      this.config.height / (2 * Math.tan(((Camera.FOV / 2) * Math.PI) / 180));
-    camera.position.set(0, 0, distance);
+    camera.position.set(...Camera.CAMERA_POSITION);
     this.scene.add(camera);
     return camera;
   }
 
-  // private setOrbitControls() {
-  //   const controls = new OrbitControls(
-  //     this.instance,
-  //     this.experience.canvasWrapper
-  //   );
-  //   return controls;
-  // }
+  private setOrbitControls() {
+    const controls = new OrbitControls(
+      this.instance,
+      this.experience.canvasWrapper
+    );
+    return controls;
+  }
 
   resize() {
     this.config = this.experience.config;
     this.instance.aspect = this.config.width / this.config.height;
     this.instance.updateProjectionMatrix();
-    const distance =
-      this.config.height / (2 * Math.tan(((Camera.FOV / 2) * Math.PI) / 180));
-    this.instance.position.set(0, 0, distance);
   }
 }

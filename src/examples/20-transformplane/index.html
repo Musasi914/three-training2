@@ -5,54 +5,191 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <link rel="stylesheet" href="/src/style.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>20. transform plane</title>
+    <title>20. Transform Plane</title>
     <style>
-      ul,
-      li {
-        list-style: none;
+      #canvasWrapper {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        z-index: 1 !important;
+        pointer-events: none !important;
       }
       .container {
-        width: 80%;
-        margin-inline: auto;
-        max-width: 1000px;
-        pointer-events: none;
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 2rem;
       }
-      .image-list {
-        width: 800px;
-        margin-inline: auto;
-        padding-block: 180px;
-        & > * + * {
-          margin-top: 180px;
-        }
+      .list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 6rem 2rem;
       }
-      .image-item {
+      .image {
         width: 100%;
-        & > img {
+        margin-bottom: 1rem;
+        aspect-ratio: 16/9;
+        img {
+          aspect-ratio: 16/9;
           display: block;
-          width: 800px;
-          height: 500px;
+          width: 100%;
+          height: 100%;
           object-fit: cover;
           opacity: 0;
         }
       }
-      #canvasWrapper {
-        position: fixed !important;
-        z-index: -1 !important;
-        inset: 0 !important;
-        pointer-events: none !important;
-      }
     </style>
   </head>
   <body>
-    <div class="container">
-      <ul class="image-list">
-        <li class="image-item"><img src="/landscape/a.webp" alt="" /></li>
-        <li class="image-item"><img src="/landscape/a.webp" alt="" /></li>
-        <li class="image-item"><img src="/landscape/a.webp" alt="" /></li>
-        <li class="image-item"><img src="/landscape/a.webp" alt="" /></li>
-      </ul>
-    </div>
     <div id="canvasWrapper"></div>
+    <main>
+      <div class="container">
+        <div class="list">
+          <div class="item">
+            <div class="image">
+              <img src="/landscape/a.webp" alt="" />
+            </div>
+            <h2>title</h2>
+            <p>
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cum,
+              nihil, incidunt voluptatem quidem quia ipsa fugit numquam minima
+              ratione tempore consectetur voluptates maxime distinctio, facere
+              commodi deleniti iusto. Sequi, nihil?
+            </p>
+          </div>
+          <div class="item">
+            <div class="image">
+              <img src="/portrait/1.webp" alt="" />
+            </div>
+            <h2>title</h2>
+            <p>
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cum,
+              nihil, incidunt voluptatem quidem quia ipsa fugit numquam minima
+              ratione tempore consectetur voluptates maxime distinctio, facere
+              commodi deleniti iusto. Sequi, nihil?
+            </p>
+          </div>
+          <div class="item">
+            <div class="image">
+              <img src="/portrait/2.webp" alt="" />
+            </div>
+            <h2>title</h2>
+            <p>
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cum,
+              nihil, incidunt voluptatem quidem quia ipsa fugit numquam minima
+              ratione tempore consectetur voluptates maxime distinctio, facere
+              commodi deleniti iusto. Sequi, nihil?
+            </p>
+          </div>
+          <div class="item">
+            <div class="image">
+              <img src="/portrait/3.webp" alt="" />
+            </div>
+            <h2>title</h2>
+            <p>
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cum,
+              nihil, incidunt voluptatem quidem quia ipsa fugit numquam minima
+              ratione tempore consectetur voluptates maxime distinctio, facere
+            </p>
+          </div>
+          <div class="item">
+            <div class="image">
+              <img src="/landscape/a.webp" alt="" />
+            </div>
+            <h2>title</h2>
+            <p>
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cum,
+              nihil, incidunt voluptatem quidem quia ipsa fugit numquam minima
+              ratione tempore consectetur voluptates maxime distinctio, facere
+              commodi deleniti iusto. Sequi, nihil?
+            </p>
+          </div>
+          <div class="item">
+            <div class="image">
+              <img src="/portrait/1.webp" alt="" />
+            </div>
+            <h2>title</h2>
+            <p>
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cum,
+              nihil, incidunt voluptatem quidem quia ipsa fugit numquam minima
+              ratione tempore consectetur voluptates maxime distinctio, facere
+              commodi deleniti iusto. Sequi, nihil?
+            </p>
+          </div>
+          <div class="item">
+            <div class="image">
+              <img src="/portrait/2.webp" alt="" />
+            </div>
+            <h2>title</h2>
+            <p>
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cum,
+              nihil, incidunt voluptatem quidem quia ipsa fugit numquam minima
+              ratione tempore consectetur voluptates maxime distinctio, facere
+              commodi deleniti iusto. Sequi, nihil?
+            </p>
+          </div>
+          <div class="item">
+            <div class="image">
+              <img src="/portrait/3.webp" alt="" />
+            </div>
+            <h2>title</h2>
+            <p>
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cum,
+              nihil, incidunt voluptatem quidem quia ipsa fugit numquam minima
+              ratione tempore consectetur voluptates maxime distinctio, facere
+            </p>
+          </div>
+          <div class="item">
+            <div class="image">
+              <img src="/landscape/a.webp" alt="" />
+            </div>
+            <h2>title</h2>
+            <p>
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cum,
+              nihil, incidunt voluptatem quidem quia ipsa fugit numquam minima
+              ratione tempore consectetur voluptates maxime distinctio, facere
+              commodi deleniti iusto. Sequi, nihil?
+            </p>
+          </div>
+          <div class="item">
+            <div class="image">
+              <img src="/portrait/1.webp" alt="" />
+            </div>
+            <h2>title</h2>
+            <p>
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cum,
+              nihil, incidunt voluptatem quidem quia ipsa fugit numquam minima
+              ratione tempore consectetur voluptates maxime distinctio, facere
+              commodi deleniti iusto. Sequi, nihil?
+            </p>
+          </div>
+          <div class="item">
+            <div class="image">
+              <img src="/portrait/2.webp" alt="" />
+            </div>
+            <h2>title</h2>
+            <p>
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cum,
+              nihil, incidunt voluptatem quidem quia ipsa fugit numquam minima
+              ratione tempore consectetur voluptates maxime distinctio, facere
+              commodi deleniti iusto. Sequi, nihil?
+            </p>
+          </div>
+          <div class="item">
+            <div class="image">
+              <img src="/portrait/3.webp" alt="" />
+            </div>
+            <h2>title</h2>
+            <p>
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cum,
+              nihil, incidunt voluptatem quidem quia ipsa fugit numquam minima
+              ratione tempore consectetur voluptates maxime distinctio, facere
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
     <script type="module" src="./main.ts"></script>
   </body>
 </html>

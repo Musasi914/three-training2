@@ -149,6 +149,12 @@ export const examples: ExampleInfo[] = [
     description: "Manual Render Target",
     path: "/src/examples/23-manual-render-target/index.html",
   },
+  {
+    id: "24-gpgpu",
+    name: "24. GPGPU",
+    description: "GPGPU",
+    path: "/src/examples/24-gpgpu/index.html",
+  },
 ];
 
 // Routerクラス：ページの遷移（ルーティング）を管理するクラス

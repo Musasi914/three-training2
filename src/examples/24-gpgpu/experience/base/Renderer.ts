@@ -17,11 +17,12 @@ export class Renderer {
 
   private setInstance() {
     const renderer = new THREE.WebGLRenderer({
-      alpha: true,
+      alpha: false,
       antialias: this.config.pixelRatio === 1,
     });
 
     this.canvasWrapper.appendChild(renderer.domElement);
+    renderer.setClearColor(0x242424, 1);
     renderer.setPixelRatio(this.config.pixelRatio);
     renderer.setSize(this.config.width, this.config.height);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -40,10 +41,5 @@ export class Renderer {
     );
   }
 
-  update() {
-    this.instance.render(
-      this.experience.scene,
-      this.experience.camera.instance
-    );
-  }
+  update() {}
 }

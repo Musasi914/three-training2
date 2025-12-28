@@ -15,8 +15,12 @@ export class World {
     this.resource = this.experience.resource;
     this.resource.on("ready", () => {
       console.log("resource ready");
-      this.example = new Example();
     });
+    this.example = new Example();
+  }
+
+  resize() {
+    this.example?.resize();
   }
 
   update() {

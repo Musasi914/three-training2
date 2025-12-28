@@ -1,62 +1,102 @@
 import Experience from "./Experience";
 import * as THREE from "three";
-import vertexShader from "./glsl/vert.vert";
-import fragmentShader from "./glsl/frag.frag";
-import ImagePlane from "./ImagePlane";
-import ScrollController from "./ScrollController";
+import vertexShader from "./glsl/sphere.vert";
+import fragmentShader from "./glsl/sphere.frag";
 
 export default class Example {
   experience: Experience;
   scene: Experience["scene"];
   gui: Experience["gui"];
+  resource: Experience["resource"];
+  camera: THREE.Camera;
 
-  planeGeometry!: THREE.PlaneGeometry;
-  planeMaterial!: THREE.ShaderMaterial;
-  planeMesh!: THREE.Mesh;
+  meshes: { imageEl: HTMLImageElement; mesh: THREE.Mesh }[] = [];
 
-  imagePlanes: ImagePlane[] = [];
+  targetScrollY: number;
+  currentScrollY: number;
+  scrollDiff: number;
 
-  scroll: ScrollController;
   constructor() {
     this.experience = Experience.getInstance();
     this.scene = this.experience.scene;
     this.gui = this.experience.gui;
-    this.gui.hide();
+    this.resource = this.experience.resource;
+    this.camera = this.experience.camera.instance;
 
-    const imageArray = [...document.querySelectorAll("img")];
-    for (const imgEl of imageArray) {
-      const texture = this.experience.resource.items.plane;
-      texture.colorSpace = THREE.SRGBColorSpace;
-      const geometry = new THREE.PlaneGeometry(1, 1, 100, 100);
+    this.createPlanes();
+
+    this.targetScrollY = 0;
+    this.currentScrollY = 0;
+    this.scrollDiff = 0;
+  }
+
+  private async createPlanes() {
+    const targetImages = Array.from(
+      document.querySelectorAll(".image img")
+    ) as HTMLImageElement[];
+
+    for (const imageEl of targetImages) {
+      const image = await new THREE.TextureLoader().loadAsync(imageEl.src);
+      image.colorSpace = THREE.SRGBColorSpace;
+
+      const imageElBoundingBox = imageEl.getBoundingClientRect();
+      const planeWidth = imageElBoundingBox.width;
+      const planeHeight = imageElBoundingBox.height;
+      const geometry = new THREE.PlaneGeometry(1, 1, 32, 32);
+      const planeAspect = planeWidth / planeHeight;
+      const imageAspect = image.image.width / image.image.height;
+
       const material = new THREE.ShaderMaterial({
         vertexShader,
         fragmentShader,
         uniforms: {
-          uTexture: { value: texture },
+          uTexture: { value: image },
+          uImageAspect: { value: imageAspect },
+          uPlaneAspect: { value: planeAspect },
           uScrollDiff: { value: 0 },
         },
       });
       const mesh = new THREE.Mesh(geometry, material);
+      mesh.scale.set(planeWidth, planeHeight, 1);
+      mesh.position.set(
+        imageElBoundingBox.left -
+          (this.experience.config.width - imageElBoundingBox.width) / 2,
+        -imageElBoundingBox.top +
+          (this.experience.config.height - imageElBoundingBox.height) / 2,
+        0
+      );
       this.scene.add(mesh);
-
-      const imagePlane = new ImagePlane(mesh, imgEl);
-      imagePlane.setParams();
-      this.imagePlanes.push(imagePlane);
+      this.meshes.push({ imageEl, mesh });
     }
-
-    this.scroll = new ScrollController();
   }
 
-  resize() {}
+  private setPlaneParams(imageEl: HTMLImageElement, mesh: THREE.Mesh) {
+    const imageElBoundingBox = imageEl.getBoundingClientRect();
+    const planeWidth = imageElBoundingBox.width;
+    const planeHeight = imageElBoundingBox.height;
+    mesh.scale.set(planeWidth, planeHeight, 1);
+    mesh.position.set(
+      imageElBoundingBox.left -
+        (this.experience.config.width - imageElBoundingBox.width) / 2,
+      -imageElBoundingBox.top +
+        (this.experience.config.height - imageElBoundingBox.height) / 2,
+      0
+    );
+  }
 
   update() {
-    this.scroll.update();
+    this.targetScrollY = window.scrollY;
+    this.currentScrollY = THREE.MathUtils.lerp(
+      this.currentScrollY,
+      this.targetScrollY,
+      0.2
+    );
+    this.scrollDiff = this.targetScrollY - this.currentScrollY;
 
-    for (const imagePlane of this.imagePlanes) {
-      imagePlane.update(this.scroll.scrollDiff);
-    }
-    // this.experience.camera.instance.position.y -= 10;
-    // this.planeMaterial.uniforms.uTime.value =
-    //   this.experience.time.elapsed / 1000;
+    this.meshes.forEach(({ imageEl, mesh }) => {
+      this.setPlaneParams(imageEl, mesh);
+      (mesh.material as THREE.ShaderMaterial).uniforms.uScrollDiff.value =
+        this.scrollDiff;
+    });
   }
 }
