@@ -155,6 +155,12 @@ export const examples: ExampleInfo[] = [
     description: "GPGPU",
     path: "/src/examples/24-gpgpu/index.html",
   },
+  {
+    id: "25-revie",
+    name: "25. GPGPU-review",
+    description: "GPGPU-review",
+    path: "/src/examples/25-revie/index.html",
+  },
 ];
 
 // Routerクラス：ページの遷移（ルーティング）を管理するクラス
