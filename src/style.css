@@ -93,6 +93,7 @@ body {
   height: 100vh;
   display: block;
   position: relative;
+  contain: strict;
 }
 
 .back-button {
