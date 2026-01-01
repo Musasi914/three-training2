@@ -161,6 +161,18 @@ export const examples: ExampleInfo[] = [
     description: "GPGPU-review",
     path: "/src/examples/25-revie/index.html",
   },
+  {
+    id: "26-clickmesh",
+    name: "26. Click Me",
+    description: "Click Me",
+    path: "/src/examples/26-clickmesh/index.html",
+  },
+  {
+    id: "gpgpu-review",
+    name: "27. GPGPU-review2",
+    description: "review",
+    path: "/src/examples/27-gpgpu-review/index.html",
+  },
 ];
 
 // Routerクラス：ページの遷移（ルーティング）を管理するクラス
