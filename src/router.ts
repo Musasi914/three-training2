@@ -179,6 +179,18 @@ export const examples: ExampleInfo[] = [
     description: "Birds",
     path: "/src/examples/28-birds/index.html",
   },
+  {
+    id: "29-land-review",
+    name: "29. Land Review",
+    description: "Land Review",
+    path: "/src/examples/29-land-review/index.html",
+  },
+  {
+    id: "30-gpgpu-re",
+    name: "30. GPGPU-review",
+    description: "GPGPU-review",
+    path: "/src/examples/30-gpgpu-re/index.html",
+  },
 ];
 
 // Routerクラス：ページの遷移（ルーティング）を管理するクラス
