@@ -2,26 +2,13 @@ import Experience from "./Experience";
 import * as THREE from "three/webgpu";
 import GfxConfig from "./gfx/gfxConfig";
 import {
-  color,
-  cos,
   cross,
-  dFdx,
-  dFdy,
   float,
-  floatBitsToInt,
   Fn,
   Loop,
   mx_noise_vec3,
-  normalize,
-  normalLocal,
   positionLocal,
-  positionWorld,
-  sin,
-  time,
   transformNormalToView,
-  uint,
-  uniform,
-  uv,
   varying,
   vec3,
 } from "three/tsl";
