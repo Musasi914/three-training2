@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import Experience from "../Experience";
-import { OrbitControls } from "three/examples/jsm/Addons.js";
+// import { OrbitControls } fro/m/ "three/examples/jsm/Addons.js";
 
 export class Camera {
   static FOV = 75;

@@ -49,6 +49,7 @@ export default class Experience {
     this.config = this.setConfig();
 
     this.scene = new THREE.Scene();
+    this.scene.fog = new THREE.Fog(0xffffff, 100, 1000);
     this.camera = new Camera();
     this.renderer = new Renderer();
     this.resource = new Resource(sources);

@@ -22,7 +22,7 @@ export class Renderer {
     });
 
     this.canvasWrapper.appendChild(renderer.domElement);
-    renderer.setClearColor(0x242424, 1);
+    renderer.setClearColor(0xffffff, 1);
     renderer.setPixelRatio(this.config.pixelRatio);
     renderer.setSize(this.config.width, this.config.height);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
