@@ -197,6 +197,12 @@ export const examples: ExampleInfo[] = [
     description: "Move Car",
     path: "/src/examples/31-move-car/index.html",
   },
+  {
+    id: "32-globe",
+    name: "32. Globe",
+    description: "Globe",
+    path: "/src/examples/32-globe/index.html",
+  },
 ];
 
 // Routerクラス：ページの遷移（ルーティング）を管理するクラス
