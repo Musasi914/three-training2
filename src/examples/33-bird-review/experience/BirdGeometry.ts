@@ -1,6 +1,5 @@
 import * as THREE from "three";
 import Example from "./Example";
-
 export default class BirdGeometry extends THREE.BufferGeometry {
   constructor() {
     super();
@@ -9,7 +8,6 @@ export default class BirdGeometry extends THREE.BufferGeometry {
     const triangles = Example.BIRDS * trianglesPerBird;
     const points = triangles * 3;
 
-    // verteces
     const vertices = new Float32Array(points * 3);
 
     let v = 0;
@@ -52,13 +50,14 @@ export default class BirdGeometry extends THREE.BufferGeometry {
     // colors
     const birdColors = new Float32Array(points * 3);
     const references = new Float32Array(points * 2);
-    const birdVertex = new Float32Array(points * 3);
+    const birdVertex = new Float32Array(points);
 
     for (let v = 0; v < triangles * 3; v++) {
       const triangleIndex = ~~(v / 3);
       const birdIndex = ~~(triangleIndex / trianglesPerBird);
-      const x = (birdIndex % Example.WIDTH) / Example.WIDTH;
-      const y = ~~(birdIndex / Example.WIDTH) / Example.WIDTH;
+
+      const x = ((birdIndex % Example.WIDTH) + 0.5) / Example.WIDTH;
+      const y = (~~(birdIndex / Example.WIDTH) + 0.5) / Example.WIDTH;
 
       const c = new THREE.Color(
         0x666666 + (~~(v / 9) / Example.BIRDS) * 0x666666
@@ -68,7 +67,7 @@ export default class BirdGeometry extends THREE.BufferGeometry {
       birdColors[v * 3 + 1] = c.g;
       birdColors[v * 3 + 2] = c.b;
 
-      references[v * 2] = x;
+      references[v * 2 + 0] = x;
       references[v * 2 + 1] = y;
 
       birdVertex[v] = v % 9;

@@ -1,18 +1,18 @@
 import * as THREE from "three";
 import Experience from "../Experience";
-// import { OrbitControls } from "three/examples/jsm/Addons.js";
+import { OrbitControls } from "three/examples/jsm/Addons.js";
 
 export class Camera {
   static FOV = 75;
   static NEAR = 1;
   static FAR = 3000;
-  static CAMERA_POSITION = [0, 0, 350] as const;
+  static CAMERA_POSITION = [0, 0, 400] as const;
 
   instance: THREE.PerspectiveCamera;
   experience: Experience;
   scene: Experience["scene"];
   config: Experience["config"];
-  // controls: OrbitControls;
+  controls: OrbitControls;
   // controls: MapControls;
 
   constructor() {
@@ -21,7 +21,7 @@ export class Camera {
     this.config = this.experience.config;
 
     this.instance = this.setInstance();
-    // this.controls = this.setOrbitControls();
+    this.controls = this.setOrbitControls();
   }
 
   private setInstance() {
@@ -36,13 +36,13 @@ export class Camera {
     return camera;
   }
 
-  // private setOrbitControls() {
-  //   const controls = new OrbitControls(
-  //     this.instance,
-  //     this.experience.canvasWrapper
-  //   );
-  //   return controls;
-  // }
+  private setOrbitControls() {
+    const controls = new OrbitControls(
+      this.instance,
+      this.experience.canvasWrapper
+    );
+    return controls;
+  }
 
   resize() {
     this.config = this.experience.config;
