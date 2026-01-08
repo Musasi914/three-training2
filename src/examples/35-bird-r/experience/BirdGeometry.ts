@@ -5,15 +5,13 @@ export default class BirdGeometry extends THREE.BufferGeometry {
     super();
 
     const trianglesPerBird = 3;
-    const triangles = Example.BIRDS * trianglesPerBird;
-    const points = triangles * 3;
+    const pointsPerBird = trianglesPerBird * 3;
+    const allPoints = Example.BIRD_COUNT * pointsPerBird;
 
-    const vertices = new Float32Array(points * 3);
+    const vertices = new Float32Array(allPoints * 3);
 
     let v = 0;
-    const wingsSpan = 20;
-
-    for (let i = 0; i < Example.BIRDS; i++) {
+    for (let i = 0; i < Example.BIRD_COUNT; i++) {
       // body
       vertices[v++] = 0;
       vertices[v++] = 0;
@@ -24,61 +22,43 @@ export default class BirdGeometry extends THREE.BufferGeometry {
       vertices[v++] = 0;
       vertices[v++] = 0;
       vertices[v++] = 30;
+
       // wings1
       vertices[v++] = 0;
       vertices[v++] = 0;
       vertices[v++] = -15;
-      vertices[v++] = -wingsSpan;
+      vertices[v++] = -20;
       vertices[v++] = 0;
       vertices[v++] = 0;
       vertices[v++] = 0;
       vertices[v++] = 0;
       vertices[v++] = 15;
+
       // wings2
       vertices[v++] = 0;
       vertices[v++] = 0;
       vertices[v++] = 15;
-      vertices[v++] = wingsSpan;
+      vertices[v++] = 20;
       vertices[v++] = 0;
       vertices[v++] = 0;
       vertices[v++] = 0;
       vertices[v++] = 0;
       vertices[v++] = -15;
     }
+    // bufferGeometryにuvがないから attribute referenceが必要
     this.setAttribute("position", new THREE.BufferAttribute(vertices, 3));
 
-    // colors
-    const birdColors = new Float32Array(points * 3);
-    const references = new Float32Array(points * 2);
-    const birdVertex = new Float32Array(points);
-
-    for (let v = 0; v < triangles * 3; v++) {
-      const triangleIndex = ~~(v / 3);
-      const birdIndex = ~~(triangleIndex / trianglesPerBird);
-
+    const references = new Float32Array(allPoints * 2);
+    const pointInBird = new Float32Array(allPoints);
+    for (let i = 0; i < allPoints; i++) {
+      const birdIndex = ~~(i / pointsPerBird);
+      pointInBird[i] = i % pointsPerBird;
       const x = ((birdIndex % Example.WIDTH) + 0.5) / Example.WIDTH;
       const y = (~~(birdIndex / Example.WIDTH) + 0.5) / Example.WIDTH;
-
-      const c = new THREE.Color(
-        0x666666 + (~~(v / 9) / Example.BIRDS) * 0x666666
-      );
-
-      birdColors[v * 3 + 0] = c.r;
-      birdColors[v * 3 + 1] = c.g;
-      birdColors[v * 3 + 2] = c.b;
-
-      references[v * 2 + 0] = x;
-      references[v * 2 + 1] = y;
-
-      birdVertex[v] = v % 9;
+      references[i * 2 + 0] = x;
+      references[i * 2 + 1] = y;
     }
-
-    console.log(references);
-
-    this.setAttribute("birdColor", new THREE.BufferAttribute(birdColors, 3));
+    this.setAttribute("pointInBird", new THREE.BufferAttribute(pointInBird, 1));
     this.setAttribute("reference", new THREE.BufferAttribute(references, 2));
-    this.setAttribute("birdVertex", new THREE.BufferAttribute(birdVertex, 1));
-
-    this.scale(0.2, 0.2, 0.2);
   }
 }

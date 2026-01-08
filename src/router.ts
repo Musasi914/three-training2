@@ -215,6 +215,12 @@ export const examples: ExampleInfo[] = [
     description: "webworker",
     path: "/src/examples/34-webworker/index.html",
   },
+  {
+    id: "35-bird-r",
+    name: "35. Bird Review2",
+    description: "Bird Review2",
+    path: "/src/examples/35-bird-r/index.html",
+  },
 ];
 
 // Routerクラス：ページの遷移（ルーティング）を管理するクラス
