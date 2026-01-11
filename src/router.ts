@@ -221,6 +221,24 @@ export const examples: ExampleInfo[] = [
     description: "Bird Review2",
     path: "/src/examples/35-bird-r/index.html",
   },
+  {
+    id: "36-water-gpu",
+    name: "36. Water GPU",
+    description: "GPGPU Water Simulation",
+    path: "/src/examples/36-water-gpu/index.html",
+  },
+  {
+    id: "37-water",
+    name: "37. Water",
+    description: "Water",
+    path: "/src/examples/37-water/index.html",
+  },
+  {
+    id: "38-move-car-review",
+    name: "38. Move Car Review",
+    description: "Move Car Review",
+    path: "/src/examples/38-move-car-review/index.html",
+  },
 ];
 
 // Routerクラス：ページの遷移（ルーティング）を管理するクラス
