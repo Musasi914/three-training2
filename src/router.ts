@@ -239,6 +239,12 @@ export const examples: ExampleInfo[] = [
     description: "Move Car Review",
     path: "/src/examples/38-move-car-review/index.html",
   },
+  {
+    id: "39-water-customshader",
+    name: "39. Water Custom Shader",
+    description: "Water Custom Shader",
+    path: "/src/examples/39-water-customshader/index.html",
+  },
 ];
 
 // Routerクラス：ページの遷移（ルーティング）を管理するクラス
