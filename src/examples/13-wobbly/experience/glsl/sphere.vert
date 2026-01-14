@@ -108,7 +108,8 @@ varying float vWobble;
 
 float getWobble(vec3 position, float time,float frequency, float timeFrequency, float strength) {
   vec3 warpedPosition = position;
-  warpedPosition += simplexNoise4d(vec4(position * uWarpPositionFrequency, time * uWarpTimeFrequency)) * uWarpStrength;
+  warpedPosition += simplexNoise4d(
+    vec4(position * uWarpPositionFrequency, time * uWarpTimeFrequency)) * uWarpStrength;
   return simplexNoise4d(vec4(warpedPosition * frequency, time * timeFrequency)) * strength;
 }
 

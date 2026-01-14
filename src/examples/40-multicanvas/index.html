@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="stylesheet" href="/src/style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>40. Multi Canvas</title>
+    <style>
+      body {
+        /* padding-top: 5rem; */
+      }
+      #canvasContainer {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+        z-index: -1;
+      }
+      .diagram {
+        display: inline-block;
+        width: 300px;
+        height: 200px;
+        border: 1px solid black;
+      }
+      .left {
+        float: left;
+        margin-right: 0.25em;
+      }
+      .right {
+        float: right;
+        margin-left: 0.25em;
+      }
+      p {
+        margin-top: 100rem;
+      }
+      .space {
+        height: 100vh;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="canvasContainer"></div>
+    <p>
+      <span id="box" class="diagram left"></span>
+      I love boxes. Presents come in boxes. When I find a new box I'm always
+      excited to find out what's inside. Lorem, ipsum dolor sit amet consectetur
+      adipisicing elit. Rerum doloribus eum quasi et possimus distinctio ipsam
+      accusantium, ratione dolor, at enim vitae! Eum dolor quae, odit nesciunt
+      sequi dolores tempore.
+    </p>
+    <p>
+      <span id="pyramid" class="diagram right"></span>
+      When I was a kid I dreamed of going on an expedition inside a pyramid and
+      finding a undiscovered tomb full of mummies and treasure. Lorem ipsum
+      dolor sit amet consectetur, adipisicing elit. Atque eveniet reiciendis
+      quis, ipsa rem repellendus minus quod animi iste delectus dolorum
+      molestiae earum veniam eos laudantium expedita doloribus culpa odio.
+    </p>
+    <section class="space"></section>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>
