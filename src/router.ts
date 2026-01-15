@@ -252,6 +252,12 @@ export const examples: ExampleInfo[] = [
     path: "/src/examples/40-multicanvas/index.html",
   },
   {
+    id: "41-offscreen-picking",
+    name: "41. Offscreen Picking",
+    description: "Offscreen Picking",
+    path: "/src/examples/41-offscreen-picking/index.html",
+  },
+  {
     id: "999-review",
     name: "Review",
     description: "Review",
