@@ -258,6 +258,12 @@ export const examples: ExampleInfo[] = [
     path: "/src/examples/41-offscreen-picking/index.html",
   },
   {
+    id: "42-water-with-ahiru",
+    name: "42. Water with Ahiru",
+    description: "Water with Ahiru",
+    path: "/src/examples/42-water-with-ahiru/index.html",
+  },
+  {
     id: "999-review",
     name: "Review",
     description: "Review",
