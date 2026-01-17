@@ -1,103 +1,78 @@
 import * as THREE from "three";
 import Experience from "./Experience";
+import Example from "./Example";
 
 export default class GPUPickHelper {
   experience: Experience = Experience.getInstance();
   renderer: THREE.WebGLRenderer = this.experience.renderer.instance;
 
-  pickedObject: THREE.Mesh | null = null;
-  pickedObjectSavedColor: number | null = null;
+  pickedObject:
+    | (THREE.Mesh & { material: THREE.MeshPhongMaterial })
+    | undefined;
+  pickedObjectSavedColor: number | undefined;
 
-  pickingTexture: THREE.WebGLRenderTarget = new THREE.WebGLRenderTarget(1, 1);
-  pixelBuffer: Uint8Array = new Uint8Array(4);
+  pickingTexture: THREE.WebGLRenderTarget;
+  pixelBuffer: Uint8Array;
 
-  pickPosition: THREE.Vector2 = new THREE.Vector2(-9999, -9999);
+  example: Example = Example.getInstance();
+  idToObject: Example["idToObject"] = this.example.idToObject;
 
   constructor() {
-    this.setupEventListeners();
+    this.pickedObject;
+    this.pickedObjectSavedColor;
+
+    this.pickingTexture = new THREE.WebGLRenderTarget(1, 1);
+    this.pixelBuffer = new Uint8Array(4);
   }
 
-  private setupEventListeners() {
-    const canvasWrapper = this.experience.canvasWrapper;
-    canvasWrapper.addEventListener(
-      "pointerdown",
-      this.clearPickPosition.bind(this)
-    );
-    canvasWrapper.addEventListener(
-      "pointerup",
-      this.clearPickPosition.bind(this)
-    );
-    canvasWrapper.addEventListener(
-      "pointermove",
-      this.setPickPosition.bind(this)
-    );
-  }
-
-  private clearPickPosition() {
-    this.pickPosition.set(-9999, -9999);
-  }
-
-  private setPickPosition(event: PointerEvent) {
-    const rect = this.experience.canvasWrapper.getBoundingClientRect();
-    const x =
-      ((event.clientX - rect.left) * this.experience.config.width) / rect.width;
-    const y =
-      ((event.clientY - rect.top) * this.experience.config.height) /
-      rect.height;
-    this.pickPosition.set(x, y);
-    console.log(x, y);
-  }
-
-  pick(
-    scene: THREE.Scene,
-    camera: THREE.PerspectiveCamera,
-    idToObject: Record<number, THREE.Mesh>
-  ) {
-    if (
-      this.pickedObject &&
-      "color" in this.pickedObject.material &&
-      this.pickedObject.material.color instanceof THREE.Color &&
-      this.pickedObjectSavedColor !== null
-    ) {
-      this.pickedObject.material.color.setHex(this.pickedObjectSavedColor);
-      this.pickedObject = null;
+  pick(cssPosition: THREE.Vector2, scene: THREE.Scene, camera: THREE.PerspectiveCamera, time: number) {
+    if (this.pickedObject && this.pickedObjectSavedColor !== undefined) {
+    this.pickedObject.material.emissive.setHex(this.pickedObjectSavedColor);
+    this.pickedObject = undefined;
     }
-
+    
+    const pixelRatio = this.experience.config.pixelRatio;
+    
+    // set the view offset to represent just a single pixel under the mouse
     camera.setViewOffset(
-      this.experience.config.width,
-      this.experience.config.height,
-      this.pickPosition.x * this.experience.config.pixelRatio,
-      this.pickPosition.y * this.experience.config.pixelRatio,
-      1,
-      1
+        this.renderer.getContext().drawingBufferWidth,   // full width
+        this.renderer.getContext().drawingBufferHeight,  // full top
+        cssPosition.x * pixelRatio | 0,             // rect x
+        cssPosition.y * pixelRatio | 0,             // rect y
+        1,                                          // rect width
+        1,                                          // rect height
     );
 
-    this.renderer.setRenderTarget(this.pickingTexture);
+    // render the scene
+    this.renderer.setRenderTarget(this.pickingTexture)
     this.renderer.render(scene, camera);
     this.renderer.setRenderTarget(null);
 
+    // clear the view offset so rendering returns to normal
     camera.clearViewOffset();
 
     this.renderer.readRenderTargetPixels(
-      this.pickingTexture,
-      0,
-      0,
-      1,
-      1,
-      this.pixelBuffer
-    );
-
+        this.pickingTexture,
+        0,   // x
+        0,   // y
+        1,   // width
+        1,   // height
+      this.pixelBuffer);
+    
     const id =
-      (this.pixelBuffer[0] << 16) |
-      (this.pixelBuffer[1] << 8) |
-      this.pixelBuffer[2];
+        (this.pixelBuffer[0] << 16) |
+        (this.pixelBuffer[1] <<  8) |
+      (this.pixelBuffer[2]);
+    
 
-    const intersectedObject = idToObject[id];
-    if (intersectedObject) {
-      this.pickedObject = intersectedObject;
-      this.pickedObjectSavedColor = (
-        this.pickedObject.material as THREE.MeshPhongMaterial
-      ).emissive.getHex();
+    const intersectedObject = this.idToObject[id];
+    if (intersectedObject && intersectedObject.material instanceof THREE.MeshPhongMaterial) {
+      // pick the first object. It's the closest one
+      this.pickedObject = intersectedObject as THREE.Mesh & { material: THREE.MeshPhongMaterial };
+      // save its color
+      this.pickedObjectSavedColor = this.pickedObject.material.emissive.getHex();
+      // set its emissive color to flashing red/yellow
+      this.pickedObject.material.emissive.setHex((time * 8) % 2 > 1 ? 0xFFFF00 : 0xFF0000);
     }
   }
 }

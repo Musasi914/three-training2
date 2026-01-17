@@ -22,6 +22,7 @@ export default class Experience {
   gui: GUI;
   stats: Stats;
   scene: THREE.Scene;
+  pickingScene: THREE.Scene;
   camera: Camera;
   renderer: Renderer;
   resource: Resource;
@@ -50,6 +51,10 @@ export default class Experience {
 
     this.scene = new THREE.Scene();
     this.scene.fog = new THREE.Fog(0xffffff, 100, 1000);
+
+    this.pickingScene = new THREE.Scene();
+    this.pickingScene.background = new THREE.Color(0x000000);
+
     this.camera = new Camera();
     this.renderer = new Renderer();
     this.resource = new Resource(sources);

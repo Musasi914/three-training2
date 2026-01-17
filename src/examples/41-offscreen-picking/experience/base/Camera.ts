@@ -33,6 +33,7 @@ export class Camera {
       Camera.FAR
     );
     camera.position.set(...Camera.CAMERA_POSITION);
+    camera.lookAt(0, 0, 0);
 
     this.cameraPole = new THREE.Object3D();
     this.scene.add(this.cameraPole);

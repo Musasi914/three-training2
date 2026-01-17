@@ -6,18 +6,8 @@ export type Source = {
 
 export const sources: Source[] = [
   {
-    name: "day",
+    name: "earth",
     type: "texture",
-    path: "/earth/day.jpg",
-  },
-  {
-    name: "night",
-    type: "texture",
-    path: "/earth/night.jpg",
-  },
-  {
-    name: "specular",
-    type: "texture",
-    path: "/earth/specularClouds.jpg",
+    path: "/earth/world-dark.png",
   },
 ];
