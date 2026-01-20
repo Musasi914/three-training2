@@ -264,6 +264,18 @@ export const examples: ExampleInfo[] = [
     path: "/src/examples/42-water-with-ahiru/index.html",
   },
   {
+    id: "43-postprocess",
+    name: "43. Postprocess",
+    description: "Postprocess",
+    path: "/src/examples/43-postprocess/index.html",
+  },
+  {
+    id: "44-shadertoy",
+    name: "44. Shadertoy",
+    description: "Shadertoy",
+    path: "/src/examples/44-shadertoy/index.html",
+  },
+  {
     id: "999-review",
     name: "Review",
     description: "Review",

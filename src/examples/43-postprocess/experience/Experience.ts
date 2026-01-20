@@ -22,7 +22,6 @@ export default class Experience {
   gui: GUI;
   stats: Stats;
   scene: THREE.Scene;
-  pickingScene: THREE.Scene;
   camera: Camera;
   renderer: Renderer;
   resource: Resource;
@@ -37,8 +36,6 @@ export default class Experience {
   constructor(canvasWrapper: HTMLDivElement) {
     Experience.instance = this;
     this.scene = new THREE.Scene();
-    this.pickingScene = new THREE.Scene();
-    this.pickingScene.background = new THREE.Color(0x000000);
     this.canvasWrapper = canvasWrapper;
 
     this.size = new Size();

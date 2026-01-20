@@ -29,7 +29,7 @@ export class Camera {
       Camera.NEAR,
       Camera.FAR
     );
-    camera.position.set(0, 0, 30);
+    camera.position.set(0, 4, 2);
     camera.lookAt(0, 0, 0);
     this.scene.add(camera);
     return camera;
@@ -40,7 +40,6 @@ export class Camera {
       this.instance,
       this.experience.canvasWrapper
     );
-    controls.autoRotate = true;
     return controls;
   }
 
