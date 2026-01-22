@@ -276,6 +276,12 @@ export const examples: ExampleInfo[] = [
     path: "/src/examples/44-shadertoy/index.html",
   },
   {
+    id: "45-showhtml",
+    name: "45. Show HTML",
+    description: "Show HTML",
+    path: "/src/examples/45-showhtml/index.html",
+  },
+  {
     id: "999-review",
     name: "Review",
     description: "Review",
@@ -325,7 +331,7 @@ export class Router {
               <h2>${example.name}</h2>
               ${example.description ? `<p>${example.description}</p>` : ""}
             </a>
-          `
+          `,
             )
             // join("")：配列の要素を空文字でつなげて1つの文字列にする
             // 例：["<div>1</div>", "<div>2</div>"] → "<div>1</div><div>2</div>"

@@ -27,9 +27,9 @@ export class Camera {
       Camera.FOV,
       this.config.width / this.config.height,
       Camera.NEAR,
-      Camera.FAR
+      Camera.FAR,
     );
-    camera.position.set(0, 0, 500);
+    camera.position.set(0, 0, 4);
     camera.lookAt(0, 0, 0);
     this.scene.add(camera);
     return camera;
@@ -38,9 +38,8 @@ export class Camera {
   private setOrbitControls() {
     const controls = new OrbitControls(
       this.instance,
-      this.experience.canvasWrapper
+      this.experience.canvasWrapper,
     );
-    controls.autoRotate = true;
     return controls;
   }
 
