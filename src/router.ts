@@ -282,6 +282,12 @@ export const examples: ExampleInfo[] = [
     path: "/src/examples/45-showhtml/index.html",
   },
   {
+    id: "46-showhtml-earth",
+    name: "46. Show HTML Earth",
+    description: "Show HTML Earth",
+    path: "/src/examples/46-showhtml-earth/index.html",
+  },
+  {
     id: "999-review",
     name: "Review",
     description: "Review",
@@ -321,6 +327,8 @@ export class Router {
         <h1>Three.js 練習場</h1>
         <div class="examples-grid">
           ${examples
+            .slice()
+            .reverse()
             // map()：配列の各要素を変換して新しい配列を作る
             // ここでは、各例（example）をHTMLのカードに変換している
             .map(
@@ -331,7 +339,7 @@ export class Router {
               <h2>${example.name}</h2>
               ${example.description ? `<p>${example.description}</p>` : ""}
             </a>
-          `,
+          `
             )
             // join("")：配列の要素を空文字でつなげて1つの文字列にする
             // 例：["<div>1</div>", "<div>2</div>"] → "<div>1</div><div>2</div>"
