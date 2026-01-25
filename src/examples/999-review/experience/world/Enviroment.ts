@@ -13,9 +13,9 @@ export default class Enviroment {
 
     this.loader = new HDRLoader();
 
-    // this.setBackground();
-    this.setAmbientLight();
-    // this.setDirectionalLight();
+    this.setBackground();
+    // this.setAmbientLight();
+    this.setDirectionalLight();
   }
 
   // private async setBackground() {
@@ -25,14 +25,30 @@ export default class Enviroment {
   //   this.scene.background = envMap;
   // }
 
-  private setAmbientLight() {
-    const ambientLight = new THREE.AmbientLight(0xffffff, 2);
-    this.scene.add(ambientLight);
+  private async setBackground() {
+    const loader = new THREE.CubeTextureLoader().setPath(
+      "/enviromentMaps/town/"
+    );
+    const cubeTexture = await loader.loadAsync([
+      "px.jpg",
+      "nx.jpg",
+      "py.jpg",
+      "ny.jpg",
+      "pz.jpg",
+      "nz.jpg",
+    ]);
+    this.scene.background = cubeTexture;
+    this.scene.environment = cubeTexture;
   }
 
-  // private setDirectionalLight() {
-  //   const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
-  //   directionalLight.position.set(5, 5, -5);
-  //   this.scene.add(directionalLight);
+  // private setAmbientLight() {
+  //   const ambientLight = new THREE.AmbientLight(0xffffff, 2);
+  //   this.scene.add(ambientLight);
   // }
+
+  private setDirectionalLight() {
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
+    directionalLight.position.set(0.5, 2.5, -5);
+    this.scene.add(directionalLight);
+  }
 }

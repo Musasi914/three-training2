@@ -6,8 +6,8 @@ export type Source = {
 
 export const sources: Source[] = [
   {
-    name: "frame",
-    type: "texture",
-    path: "/square/frame.png",
+    name: "duck",
+    type: "model",
+    path: "/models/duck.glb",
   },
 ];

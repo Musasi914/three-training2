@@ -29,7 +29,7 @@ export class Camera {
       Camera.NEAR,
       Camera.FAR
     );
-    camera.position.set(0, 0, 500);
+    camera.position.set(0, 5, 5);
     camera.lookAt(0, 0, 0);
     this.scene.add(camera);
     return camera;
