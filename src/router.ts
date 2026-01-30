@@ -294,6 +294,18 @@ export const examples: ExampleInfo[] = [
     path: "/src/examples/47-earth-picking/index.html",
   },
   {
+    id: "48-aurora",
+    name: "48. Aurora",
+    description: "Aurora",
+    path: "/src/examples/48-aurora/index.html",
+  },
+  {
+    id: "49-canvasTexture",
+    name: "49. Canvas Texture",
+    description: "Canvas Texture",
+    path: "/src/examples/49-canvasTexture/index.html",
+  },
+  {
     id: "999-review",
     name: "Review",
     description: "Review",
