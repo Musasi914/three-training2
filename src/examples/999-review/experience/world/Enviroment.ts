@@ -13,7 +13,7 @@ export default class Enviroment {
 
     this.loader = new HDRLoader();
 
-    this.setBackground();
+    // this.setBackground();
     // this.setAmbientLight();
     this.setDirectionalLight();
   }
@@ -25,21 +25,21 @@ export default class Enviroment {
   //   this.scene.background = envMap;
   // }
 
-  private async setBackground() {
-    const loader = new THREE.CubeTextureLoader().setPath(
-      "/enviromentMaps/town/"
-    );
-    const cubeTexture = await loader.loadAsync([
-      "px.jpg",
-      "nx.jpg",
-      "py.jpg",
-      "ny.jpg",
-      "pz.jpg",
-      "nz.jpg",
-    ]);
-    this.scene.background = cubeTexture;
-    this.scene.environment = cubeTexture;
-  }
+  // private async setBackground() {
+  //   const loader = new THREE.CubeTextureLoader().setPath(
+  //     "/enviromentMaps/town/"
+  //   );
+  //   const cubeTexture = await loader.loadAsync([
+  //     "px.jpg",
+  //     "nx.jpg",
+  //     "py.jpg",
+  //     "ny.jpg",
+  //     "pz.jpg",
+  //     "nz.jpg",
+  //   ]);
+  //   this.scene.background = cubeTexture;
+  //   this.scene.environment = cubeTexture;
+  // }
 
   // private setAmbientLight() {
   //   const ambientLight = new THREE.AmbientLight(0xffffff, 2);
