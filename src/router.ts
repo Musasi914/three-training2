@@ -306,6 +306,12 @@ export const examples: ExampleInfo[] = [
     path: "/src/examples/49-canvasTexture/index.html",
   },
   {
+    id: "50-aurora2",
+    name: "50. Aurora2",
+    description: "Aurora2",
+    path: "/src/examples/50-aurora2/index.html",
+  },
+  {
     id: "999-review",
     name: "Review",
     description: "Review",
