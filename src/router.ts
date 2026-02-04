@@ -312,6 +312,12 @@ export const examples: ExampleInfo[] = [
     path: "/src/examples/50-aurora2/index.html",
   },
   {
+    id: "51-fluid",
+    name: "51. Fluid",
+    description: "Fluid",
+    path: "/src/examples/51-fluid/index.html",
+  },
+  {
     id: "999-review",
     name: "Review",
     description: "Review",

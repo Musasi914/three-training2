@@ -37,7 +37,7 @@ export default class Example {
         uTime: { value: 0 },
         uBrightness: { value: 3.0 },
         uDecay: { value: 0.1 },
-        uSpeed: { value: 0.1 },
+        uSpeed: { value: 0.5 },
         uScale: { value: 1.0 },
         uOffset: { value: 0.0 },
         uHfade: { value: 0.45 },
