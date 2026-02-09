@@ -6,6 +6,7 @@ export type ExampleInfo = {
   name: string;
   description?: string;
   path: string;
+  hide?: true;
 };
 
 export const examples: ExampleInfo[] = [
@@ -318,6 +319,19 @@ export const examples: ExampleInfo[] = [
     path: "/src/examples/51-fluid/index.html",
   },
   {
+    id: "52-fluid-simple",
+    name: "52. Fluid Simple",
+    description: "Fluid simulation (minimal, readable)",
+    path: "/src/examples/52-fluid-simple/index.html",
+  },
+  {
+    id: "53-babble",
+    name: "53. Babble",
+    description: "babble素材 + shader で合成/歪み/フレア",
+    path: "/src/examples/53-babble/index.html",
+    hide: true,
+  },
+  {
     id: "999-review",
     name: "Review",
     description: "Review",
@@ -359,6 +373,7 @@ export class Router {
           ${examples
             .slice()
             .reverse()
+            .filter((example) => !example.hide)
             // map()：配列の各要素を変換して新しい配列を作る
             // ここでは、各例（example）をHTMLのカードに変換している
             .map(

@@ -87,6 +87,8 @@ vec4 aurora(vec3 rayDirection) {
     smoothedSampleColorAlpha = mix(smoothedSampleColorAlpha, sampleColorAlpha, 0.5);
     accumulatedColorAlpha += smoothedSampleColorAlpha * attenuation * smoothstep(0.0, 5.0, fi);
 
+    // accumulatedColorAlpha += sampleColorAlpha * attenuation;
+
     attenuation *= attenuationStep; // 奥ほど寄与が小さくなる
   }
   
