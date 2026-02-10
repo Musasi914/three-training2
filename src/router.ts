@@ -332,6 +332,12 @@ export const examples: ExampleInfo[] = [
     hide: true,
   },
   {
+    id: "54-shader-prac",
+    name: "54. shader-prac",
+    description: "book of shadersの練習所",
+    path: "/src/examples/54-shader-prac/index.html",
+  },
+  {
     id: "999-review",
     name: "Review",
     description: "Review",
