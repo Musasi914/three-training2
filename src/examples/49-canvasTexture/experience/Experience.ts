@@ -53,8 +53,8 @@ export default class Experience {
     this.renderer = new Renderer();
     this.resource = new Resource(sources);
 
-    this.world = new World();
     this.enviroment = new Enviroment();
+    this.world = new World();
 
     this.size.on("resize", this.resize.bind(this));
     this.time.on("tick", this.update.bind(this));
