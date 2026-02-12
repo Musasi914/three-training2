@@ -8,8 +8,6 @@ type PointerState = {
   deltaUv: THREE.Vector2;
   /** 前フレームの uv */
   previousUv: THREE.Vector2;
-  /** 押下中（mouse/touch/pen） */
-  isDown: boolean;
   /** 前フレームから move を受けたか */
   movedSinceLastUpdate: boolean;
   /** 今フレームで move が発生したか（update() 後に参照する） */
@@ -29,7 +27,6 @@ export default class Pointer {
       uv: new THREE.Vector2(0.5, 0.5),
       previousUv: new THREE.Vector2(0.5, 0.5),
       deltaUv: new THREE.Vector2(0, 0),
-      isDown: false,
       movedSinceLastUpdate: false,
       movedThisFrame: false,
     };
@@ -41,10 +38,10 @@ export default class Pointer {
     const el = this.el;
     el.style.touchAction = "none";
 
+    // 押下状態は持たない（「移動したら注入」で統一）
+    // ただし touch/pen で pointermove を安定させるために capture は行う
     el.addEventListener("pointerdown", (e) => {
-      this.state.isDown = true;
       this.updateFromEvent(e);
-      // 押下直後に巨大なdeltaが出ないよう初期化
       this.state.previousUv.copy(this.state.uv);
       this.state.deltaUv.set(0, 0);
       el.setPointerCapture?.(e.pointerId);
@@ -55,7 +52,6 @@ export default class Pointer {
     });
 
     const up = (e: PointerEvent) => {
-      this.state.isDown = false;
       this.updateFromEvent(e);
       this.state.previousUv.copy(this.state.uv);
       this.state.deltaUv.set(0, 0);
@@ -67,9 +63,6 @@ export default class Pointer {
     };
     el.addEventListener("pointerup", up);
     el.addEventListener("pointercancel", up);
-    el.addEventListener("pointerleave", () => {
-      this.state.isDown = false;
-    });
   }
 
   private updateFromEvent(e: PointerEvent) {

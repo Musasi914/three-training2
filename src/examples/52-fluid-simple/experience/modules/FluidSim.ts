@@ -25,13 +25,11 @@ export type FluidSimTuning = {
   splatRadius: number; // in cells
   forceStrength: number;
   dyeIntensity: number;
-  pressToApply: boolean;
 };
 
 export type FluidSimInput = {
   pointerUv: THREE.Vector2;
   pointerDeltaUv: THREE.Vector2;
-  pointerDown: boolean;
   pointerMovedThisFrame: boolean;
   color: THREE.Color;
 };
@@ -54,9 +52,10 @@ export class FluidSim {
   private divergenceTarget: THREE.WebGLRenderTarget | null = null;
   private divergenceScene: THREE.Scene | null = null;
   private divergenceCamera: THREE.OrthographicCamera | null = null;
-  private divergenceMesh:
-    | THREE.Mesh<THREE.PlaneGeometry, THREE.ShaderMaterial>
-    | null = null;
+  private divergenceMesh: THREE.Mesh<
+    THREE.PlaneGeometry,
+    THREE.ShaderMaterial
+  > | null = null;
 
   private px: THREE.Vector2;
 
@@ -69,7 +68,7 @@ export class FluidSim {
     this.px = new THREE.Vector2(1 / this.width, 1 / this.height);
 
     this.tuning = {
-      resolutionScale: 0.5,
+      resolutionScale: 1,
       dt: 0.016,
       pressureIterations: 24,
       velocityDissipation: 0.99,
@@ -77,7 +76,6 @@ export class FluidSim {
       splatRadius: 80,
       forceStrength: 80,
       dyeIntensity: 2.0,
-      pressToApply: false,
     };
 
     this.rebuild();
@@ -170,7 +168,11 @@ export class FluidSim {
   }
 
   private createComputeRenderer() {
-    const gcr = new GPUComputationRenderer(this.width, this.height, this.renderer);
+    const gcr = new GPUComputationRenderer(
+      this.width,
+      this.height,
+      this.renderer
+    );
     gcr.setDataType(THREE.HalfFloatType);
     return gcr;
   }
@@ -178,11 +180,8 @@ export class FluidSim {
   private createRenderTarget() {
     return new THREE.WebGLRenderTarget(this.width, this.height, {
       type: THREE.HalfFloatType,
-      format: THREE.RGBAFormat,
       minFilter: THREE.NearestFilter,
       magFilter: THREE.NearestFilter,
-      wrapS: THREE.ClampToEdgeWrapping,
-      wrapT: THREE.ClampToEdgeWrapping,
       depthBuffer: false,
       stencilBuffer: false,
       generateMipmaps: false,
@@ -251,8 +250,12 @@ export class FluidSim {
     this.pressureVar.material.uniforms.uPx = { value: this.px.clone() };
 
     // project uniforms
-    this.projectVar.material.uniforms.uVelocity = { value: new THREE.Texture() };
-    this.projectVar.material.uniforms.uPressure = { value: new THREE.Texture() };
+    this.projectVar.material.uniforms.uVelocity = {
+      value: new THREE.Texture(),
+    };
+    this.projectVar.material.uniforms.uPressure = {
+      value: new THREE.Texture(),
+    };
     this.projectVar.material.uniforms.uPx = { value: this.px.clone() };
     this.projectVar.material.uniforms.uDt = { value: this.tuning.dt };
 
@@ -267,9 +270,15 @@ export class FluidSim {
       value: new THREE.Vector2(0.5, 0.5),
     };
     this.dyeVar.material.uniforms.uPointerActive = { value: 0 };
-    this.dyeVar.material.uniforms.uSplatRadius = { value: this.tuning.splatRadius };
-    this.dyeVar.material.uniforms.uColor = { value: new THREE.Color("#4aa3ff") };
-    this.dyeVar.material.uniforms.uIntensity = { value: this.tuning.dyeIntensity };
+    this.dyeVar.material.uniforms.uSplatRadius = {
+      value: this.tuning.splatRadius,
+    };
+    this.dyeVar.material.uniforms.uColor = {
+      value: new THREE.Color("#4aa3ff"),
+    };
+    this.dyeVar.material.uniforms.uIntensity = {
+      value: this.tuning.dyeIntensity,
+    };
   }
 
   private renderDivergence(velocity: THREE.Texture, dt: number) {
@@ -286,7 +295,10 @@ export class FluidSim {
     this.renderer.setRenderTarget(null);
   }
 
-  private getCurrentTexture(variable: Variable | null, compute: GPUComputationRenderer | null) {
+  private getCurrentTexture(
+    variable: Variable | null,
+    compute: GPUComputationRenderer | null
+  ) {
     if (!variable || !compute) return null;
     return compute.getCurrentRenderTarget(variable).texture;
   }
@@ -307,9 +319,8 @@ export class FluidSim {
 
     const dt = Math.min(1 / 30, Math.max(1 / 240, this.tuning.dt));
 
-    const pointerActive =
-      input.pointerMovedThisFrame &&
-      (!this.tuning.pressToApply || input.pointerDown);
+    // 押下状態は使わない（移動しているなら常に注入）
+    const pointerActive = input.pointerMovedThisFrame;
 
     // 1) velocity advection + force（前フレームの「投影済み速度」を読む）
     const prevVelocity = this.velocityTexture;
@@ -323,25 +334,34 @@ export class FluidSim {
     (
       this.velocityVar.material.uniforms.uPointerDeltaUv.value as THREE.Vector2
     ).copy(input.pointerDeltaUv);
-    this.velocityVar.material.uniforms.uPointerActive.value = pointerActive ? 1 : 0;
-    this.velocityVar.material.uniforms.uSplatRadius.value = this.tuning.splatRadius;
-    this.velocityVar.material.uniforms.uForceStrength.value = this.tuning.forceStrength;
+    this.velocityVar.material.uniforms.uPointerActive.value = pointerActive
+      ? 1
+      : 0;
+    this.velocityVar.material.uniforms.uSplatRadius.value =
+      this.tuning.splatRadius;
+    this.velocityVar.material.uniforms.uForceStrength.value =
+      this.tuning.forceStrength;
     this.velocityCompute.compute();
 
     const velocity =
-      this.getCurrentTexture(this.velocityVar, this.velocityCompute) ?? prevVelocity;
+      this.getCurrentTexture(this.velocityVar, this.velocityCompute) ??
+      prevVelocity;
 
     // 2) divergence
     // pxはresizeで変わるので、毎フレーム追従させる（コストは軽微）
     if (this.divergenceMesh) {
-      (this.divergenceMesh.material.uniforms.uPx.value as THREE.Vector2).copy(this.px);
+      (this.divergenceMesh.material.uniforms.uPx.value as THREE.Vector2).copy(
+        this.px
+      );
     }
     this.renderDivergence(velocity, dt);
 
     // 3) pressure solve (Jacobi iterations)
     this.pressureVar.material.uniforms.uDivergence.value =
       this.divergenceTarget?.texture;
-    (this.pressureVar.material.uniforms.uPx.value as THREE.Vector2).copy(this.px);
+    (this.pressureVar.material.uniforms.uPx.value as THREE.Vector2).copy(
+      this.px
+    );
     for (let i = 0; i < this.tuning.pressureIterations; i++) {
       this.pressureCompute.compute();
     }
@@ -352,7 +372,9 @@ export class FluidSim {
     // 4) projection
     this.projectVar.material.uniforms.uVelocity.value = velocity;
     this.projectVar.material.uniforms.uPressure.value = pressure;
-    (this.projectVar.material.uniforms.uPx.value as THREE.Vector2).copy(this.px);
+    (this.projectVar.material.uniforms.uPx.value as THREE.Vector2).copy(
+      this.px
+    );
     this.projectVar.material.uniforms.uDt.value = dt;
     this.projectCompute.compute();
 
@@ -363,14 +385,17 @@ export class FluidSim {
     this.dyeVar.material.uniforms.uDyePrev.value = this.dyeTexture;
     this.dyeVar.material.uniforms.uVelocity.value = projectedVelocity;
     this.dyeVar.material.uniforms.uDt.value = dt;
-    this.dyeVar.material.uniforms.uDissipation.value = this.tuning.dyeDissipation;
+    this.dyeVar.material.uniforms.uDissipation.value =
+      this.tuning.dyeDissipation;
     (this.dyeVar.material.uniforms.uPointerUv.value as THREE.Vector2).copy(
       input.pointerUv
     );
     this.dyeVar.material.uniforms.uPointerActive.value = pointerActive ? 1 : 0;
     this.dyeVar.material.uniforms.uSplatRadius.value = this.tuning.splatRadius;
     this.dyeVar.material.uniforms.uIntensity.value = this.tuning.dyeIntensity;
-    (this.dyeVar.material.uniforms.uColor.value as THREE.Color).copy(input.color);
+    (this.dyeVar.material.uniforms.uColor.value as THREE.Color).copy(
+      input.color
+    );
 
     this.dyeCompute.compute();
   }
@@ -385,4 +410,3 @@ export class FluidSim {
     return tex ?? new THREE.Texture();
   }
 }
-

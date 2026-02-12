@@ -62,12 +62,11 @@ export default class Output {
     // 51の色味に寄せる
     this.pointerColor.setHSL(t % 1, 0.85, 0.55);
 
-    const { uv, deltaUv, isDown, movedThisFrame } = this.pointer.state;
+    const { uv, deltaUv, movedThisFrame } = this.pointer.state;
 
     this.sim.update({
       pointerUv: uv,
       pointerDeltaUv: deltaUv,
-      pointerDown: isDown,
       pointerMovedThisFrame: movedThisFrame,
       color: this.pointerColor,
     });
@@ -75,7 +74,5 @@ export default class Output {
     // Uniform は参照だが、念のため更新（51と同じ）
     this.mesh.material.uniforms.dye.value = this.sim.dyeTexture;
     this.mesh.material.uniforms.velocity.value = this.sim.velocityTexture;
-
   }
 }
-

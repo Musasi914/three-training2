@@ -1,6 +1,6 @@
 import Experience from "./Experience";
 import * as THREE from "three";
-import fragmentShader from "./glsl/frag.frag";
+import fragmentShader from "./glsl/06-color.frag";
 
 export default class Example {
   experience: Experience;
@@ -45,7 +45,12 @@ export default class Example {
     );
   }
 
-  resize() {}
+  resize() {
+    this.uniforms.uResolution.value.set(
+      this.experience.config.width,
+      this.experience.config.height
+    );
+  }
 
   update() {
     this.uniforms.uTime.value = this.experience.time.elapsed / 1000;
