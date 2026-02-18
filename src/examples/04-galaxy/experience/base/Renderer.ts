@@ -1,5 +1,4 @@
 import {
-  BloomPass,
   EffectComposer,
   RenderPass,
   UnrealBloomPass,
