@@ -1,6 +1,6 @@
 import Experience from "./Experience";
 import * as THREE from "three";
-import fragmentShader from "./glsl/08-mat2.frag";
+import fragmentShader from "./glsl/09-pattern.frag";
 
 export default class Example {
   experience: Experience;
@@ -47,8 +47,8 @@ export default class Example {
 
   resize() {
     this.uniforms.uResolution.value.set(
-      this.experience.config.width,
-      this.experience.config.height
+      this.renderer.domElement.width,
+      this.renderer.domElement.height
     );
   }
 
