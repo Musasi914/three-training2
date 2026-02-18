@@ -1,31 +1,26 @@
 import Experience from "./Experience";
 import * as THREE from "three";
+import vertexShader from "./glsl/vertex.glsl";
+import fragmentShader from "./glsl/fragment.glsl";
 
 export default class Galaxy {
   experience: Experience;
   scene: Experience["scene"];
   gui: Experience["gui"];
-  params: {
-    size: number;
-    count: number;
-    radius: number;
-    split: number;
-    spin: number;
-    randomness: number;
-    randomnessPower: number;
-  } = {
-    size: 0.1,
-    count: 10000,
+  params = {
+    size: 400,
+    count: 50000,
     radius: 20,
-    split: 4,
+    split: 5,
     spin: 0.2,
-    randomness: 3,
-    randomnessPower: 4,
+    randomness: 4,
+    randomnessPower: 3,
+    insideColor: new THREE.Color("#ff5588"),
+    outsideColor: new THREE.Color("#4e6ef2"),
   };
   particleGeometry!: THREE.BufferGeometry;
-  particleMaterial!: THREE.PointsMaterial;
+  particleMaterial!: THREE.ShaderMaterial;
   points!: THREE.Points;
-  radiusArray: number[] = [];
 
   constructor() {
     this.experience = Experience.getInstance();
@@ -42,24 +37,35 @@ export default class Galaxy {
     if (this.particleMaterial) this.particleMaterial.dispose();
 
     this.particleGeometry = new THREE.BufferGeometry();
-    this.particleMaterial = new THREE.PointsMaterial({
-      size: this.params.size,
-      sizeAttenuation: true,
+    this.particleMaterial = new THREE.ShaderMaterial({
+      vertexShader,
+      fragmentShader,
+      uniforms: {
+        uTime: { value: 0 },
+        uSize: { value: this.params.size * this.experience.config.pixelRatio },
+      },
+      transparent: true,
       depthWrite: false,
       blending: THREE.AdditiveBlending,
-      vertexColors: true,
     });
 
-    const positions = this.createPositions();
-    const colors = this.createColors();
+    const { positions, colors, scales, randomness } = this.createAttributes();
 
     this.particleGeometry.setAttribute(
       "position",
       new THREE.BufferAttribute(positions, 3)
     );
     this.particleGeometry.setAttribute(
-      "color",
+      "aColor",
       new THREE.BufferAttribute(colors, 3)
+    );
+    this.particleGeometry.setAttribute(
+      "aScale",
+      new THREE.BufferAttribute(scales, 1)
+    );
+    this.particleGeometry.setAttribute(
+      "aRandomness",
+      new THREE.BufferAttribute(randomness, 3)
     );
 
     this.points = new THREE.Points(
@@ -69,15 +75,36 @@ export default class Galaxy {
     this.scene.add(this.points);
   }
 
-  private createPositions() {
+  private createAttributes() {
     const positions = new Float32Array(this.params.count * 3);
+    const colors = new Float32Array(this.params.count * 3);
+    const scales = new Float32Array(this.params.count * 1);
+    const randomness = new Float32Array(this.params.count * 3);
+
     for (let i = 0; i < this.params.count; i++) {
       const radius = this.params.radius * Math.random();
-      this.radiusArray.push(radius);
       const theta =
         ((Math.PI * 2) / this.params.split) * (i % this.params.split);
       const plusSpin = radius * this.params.spin;
 
+      positions[i * 3 + 0] = Math.cos(theta + plusSpin) * radius;
+      positions[i * 3 + 1] = 0;
+      positions[i * 3 + 2] = Math.sin(theta + plusSpin) * radius;
+
+      // color
+      const mixedColor = this.params.insideColor.clone();
+      const color = mixedColor.lerp(
+        this.params.outsideColor,
+        radius / this.params.radius
+      );
+      colors[i * 3 + 0] = color.r;
+      colors[i * 3 + 1] = color.g;
+      colors[i * 3 + 2] = color.b;
+
+      // scale
+      scales[i] = Math.random();
+
+      // randomness
       const randomX =
         Math.pow(Math.random() - 0.5, this.params.randomnessPower) *
         (Math.random() >= 0.5 ? -1 : 1) *
@@ -94,35 +121,19 @@ export default class Galaxy {
         this.params.randomness *
         radius;
 
-      positions[i * 3 + 0] = Math.cos(theta + plusSpin) * radius + randomX;
-      positions[i * 3 + 1] = randomY;
-      positions[i * 3 + 2] = Math.sin(theta + plusSpin) * radius + randomZ;
+      randomness[i * 3 + 0] = randomX;
+      randomness[i * 3 + 1] = randomY;
+      randomness[i * 3 + 2] = randomZ;
     }
-    return positions;
-  }
-
-  private createColors() {
-    const colors = new Float32Array(this.params.count * 3);
-    for (let i = 0; i < this.params.count; i++) {
-      const centerColor = new THREE.Color("#ff5588");
-      const edgeColor = new THREE.Color("#4e6ef2");
-      const color = centerColor.lerp(
-        edgeColor,
-        this.radiusArray[i] / this.params.radius
-      );
-      colors[i * 3 + 0] = color.r;
-      colors[i * 3 + 1] = color.g;
-      colors[i * 3 + 2] = color.b;
-    }
-    return colors;
+    return { positions, colors, scales, randomness };
   }
 
   private createGUI() {
     this.gui
       .add(this.params, "size")
-      .min(0.01)
-      .max(0.1)
-      .step(0.001)
+      .min(1)
+      .max(5000)
+      .step(0.1)
       .onChange(this.createParticles.bind(this));
     this.gui
       .add(this.params, "count")
@@ -160,5 +171,10 @@ export default class Galaxy {
       .max(10)
       .step(1)
       .onChange(this.createParticles.bind(this));
+  }
+
+  update() {
+    this.particleMaterial.uniforms.uTime.value =
+      this.experience.time.elapsed / 1000;
   }
 }

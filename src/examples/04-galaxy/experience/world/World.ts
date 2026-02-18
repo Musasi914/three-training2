@@ -16,4 +16,7 @@ export class World {
     console.log("resource", this.resource);
     this.galaxy = new Galaxy();
   }
+  update() {
+    this.galaxy?.update();
+  }
 }

@@ -1,22 +1,6 @@
 // import { GPUComputationRenderer, type Variable } from 'three/addons/misc/GPUComputationRenderer.js';
 import Experience from "./Experience";
 import * as THREE from "three";
-import GPUPicker from "./GPUPicker";
-import CustomShaderMaterial from "three-custom-shader-material/vanilla";
-
-import earthFragmentShader from "./glsl/earth.frag";
-
-const countryInfoUrl = "/json/country-info.json";
-
-type CountryInfo = {
-  name: string;
-  min: [number, number];
-  max: [number, number];
-  area: number;
-  lat: number;
-  lon: number;
-  population: { [key: string]: number };
-};
 export default class Example {
   experience: Experience;
   gui: Experience["gui"];
@@ -24,26 +8,20 @@ export default class Example {
   renderer: Experience["renderer"];
   camera: Experience["camera"];
   resource: Experience["resource"];
-  pickingScene: THREE.Scene;
 
-  earthMaterial!: CustomShaderMaterial;
-
-  labelContainerElem: HTMLDivElement;
-
-  countryInfo: CountryInfo[] = [];
-  countryData: (CountryInfo & {
-    elem: HTMLDivElement;
-    position: THREE.Vector3;
-  })[] = [];
-
-  tempV = new THREE.Vector3();
-  cameraToPoint = new THREE.Vector3();
-  normalMatrix = new THREE.Matrix3();
-
-  picker: GPUPicker;
-  pickPosition = new THREE.Vector2(-9999, -9999);
-
-  pickedCountry: CountryInfo | null = null;
+  params = {
+    size: 0.1,
+    count: 10000,
+    radius: 20,
+    split: 4,
+    spin: 0.2,
+    randomness: 3,
+    randomnessPower: 4,
+  };
+  particleGeometry!: THREE.BufferGeometry;
+  particleMaterial!: THREE.PointsMaterial;
+  points!: THREE.Points;
+  radiusArray: number[] = [];
 
   constructor() {
     this.experience = Experience.getInstance();
@@ -53,186 +31,137 @@ export default class Example {
     this.camera = this.experience.camera;
     this.resource = this.experience.resource;
 
-    this.labelContainerElem = document.querySelector(
-      "#labels"
-    ) as HTMLDivElement;
-
-    this.pickingScene = new THREE.Scene();
-    this.pickingScene.background = new THREE.Color(0);
-
-    this.setCountryData();
-    this.createEarth();
-
-    this.createPickingEarth();
-
-    this.picker = new GPUPicker();
-    this.experience.canvasWrapper.addEventListener(
-      "pointermove",
-      this.setPickPosition.bind(this)
-    );
-
-    this.experience.canvasWrapper.addEventListener(
-      "pointerup",
-      this.pickCountry.bind(this)
-    );
+    this.createParticles();
+    this.createGUI();
   }
 
-  private async setCountryData() {
-    this.countryInfo = await this.fetchCountryInfo();
+  private createParticles() {
+    this.scene.remove(this.points);
+    if (this.particleGeometry) this.particleGeometry.dispose();
+    if (this.particleMaterial) this.particleMaterial.dispose();
 
-    const lonHelper = new THREE.Object3D();
-    const latHelper = new THREE.Object3D();
-    lonHelper.add(latHelper);
-
-    const positionHelper = new THREE.Object3D();
-    positionHelper.position.z = 1;
-    latHelper.add(positionHelper);
-
-    for (const countryInfo of this.countryInfo) {
-      const { lat, lon, name } = countryInfo;
-      lonHelper.rotation.y = (Math.PI / 180) * (lon - 90);
-      latHelper.rotation.x = (Math.PI / 180) * (lat + 180);
-      positionHelper.updateWorldMatrix(true, false);
-      const position = new THREE.Vector3();
-      positionHelper.getWorldPosition(position);
-
-      const elem = document.createElement("div");
-      elem.textContent = name;
-      this.labelContainerElem.appendChild(elem);
-
-      this.countryData.push({ ...countryInfo, position, elem });
-    }
-  }
-
-  private async fetchCountryInfo() {
-    const res = await fetch(countryInfoUrl);
-    return await res.json();
-  }
-
-  private createEarth() {
-    const texture = this.resource.items["country-outlines"] as THREE.Texture;
-    texture.anisotropy = 8;
-
-    const paletteTextureWidth = 512;
-    const palette = new Uint8Array(paletteTextureWidth * 4);
-    const paletteTexture = new THREE.DataTexture(
-      palette,
-      paletteTextureWidth,
-      1
-    );
-    paletteTexture.minFilter = THREE.NearestFilter;
-    paletteTexture.magFilter = THREE.NearestFilter;
-    paletteTexture.generateMipmaps = false;
-
-    for (let i = 0; i < paletteTextureWidth; i++) {
-      palette[i * 4 + 0] = Math.random() * 255;
-      palette[i * 4 + 1] = Math.random() * 255;
-      palette[i * 4 + 2] = Math.random() * 255;
-      palette[i * 4 + 3] = 255;
-    }
-    palette.set([0, 0, 200, 255], 0);
-    paletteTexture.needsUpdate = true;
-
-    const geometry = new THREE.SphereGeometry(1, 64, 32);
-    this.earthMaterial = new CustomShaderMaterial({
-      baseMaterial: THREE.MeshBasicMaterial,
-      map: texture,
-      fragmentShader: earthFragmentShader,
-      uniforms: {
-        indexTexture: { value: null },
-        paletteTexture: { value: paletteTexture },
-        paletteTextureWidth: { value: paletteTextureWidth },
-      },
+    this.particleGeometry = new THREE.BufferGeometry();
+    this.particleMaterial = new THREE.PointsMaterial({
+      size: this.params.size,
+      sizeAttenuation: true,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+      vertexColors: true,
     });
-    const earth = new THREE.Mesh(geometry, this.earthMaterial);
-    this.scene.add(earth);
-  }
 
-  private createPickingEarth() {
-    const pickingTexture = this.resource.items[
-      "country-index"
-    ] as THREE.Texture;
-    pickingTexture.generateMipmaps = false;
-    pickingTexture.minFilter = THREE.NearestFilter;
-    pickingTexture.magFilter = THREE.NearestFilter;
+    const positions = this.createPositions();
+    const colors = this.createColors();
 
-    this.earthMaterial.uniforms.indexTexture.value = pickingTexture;
-
-    const geometry = new THREE.SphereGeometry(1, 64, 32);
-    const material = new THREE.MeshBasicMaterial({ map: pickingTexture });
-    const earth = new THREE.Mesh(geometry, material);
-    this.pickingScene.add(earth);
-  }
-
-  private pickCountry() {
-    if (this.countryData.length === 0) return;
-
-    const id = this.picker.pick(
-      this.pickPosition,
-      this.pickingScene,
-      this.camera.instance
+    this.particleGeometry.setAttribute(
+      "position",
+      new THREE.BufferAttribute(positions, 3)
     );
-    const pickedCountry = this.countryData[id - 1] || undefined;
+    this.particleGeometry.setAttribute(
+      "color",
+      new THREE.BufferAttribute(colors, 3)
+    );
 
-    if (pickedCountry && pickedCountry !== this.pickedCountry) {
-      this.pickedCountry = pickedCountry;
-    } else {
-      this.resetPickedCountry();
+    this.points = new THREE.Points(
+      this.particleGeometry,
+      this.particleMaterial
+    );
+    this.scene.add(this.points);
+  }
+
+  private createPositions() {
+    const positions = new Float32Array(this.params.count * 3);
+    for (let i = 0; i < this.params.count; i++) {
+      const radius = this.params.radius * Math.random();
+      this.radiusArray.push(radius);
+      const theta =
+        ((Math.PI * 2) / this.params.split) * (i % this.params.split);
+      const plusSpin = radius * this.params.spin;
+
+      const randomX =
+        Math.pow(Math.random() - 0.5, this.params.randomnessPower) *
+        (Math.random() >= 0.5 ? -1 : 1) *
+        this.params.randomness *
+        radius;
+      const randomY =
+        Math.pow(Math.random() - 0.5, this.params.randomnessPower) *
+        (Math.random() >= 0.5 ? -1 : 1) *
+        this.params.randomness *
+        radius;
+      const randomZ =
+        Math.pow(Math.random() - 0.5, this.params.randomnessPower) *
+        (Math.random() >= 0.5 ? -1 : 1) *
+        this.params.randomness *
+        radius;
+
+      positions[i * 3 + 0] = Math.cos(theta + plusSpin) * radius + randomX;
+      positions[i * 3 + 1] = randomY;
+      positions[i * 3 + 2] = Math.sin(theta + plusSpin) * radius + randomZ;
     }
+    return positions;
   }
 
-  private resetPickedCountry() {
-    this.pickedCountry = null;
+  private createColors() {
+    const colors = new Float32Array(this.params.count * 3);
+    for (let i = 0; i < this.params.count; i++) {
+      const centerColor = new THREE.Color("#ff5588");
+      const edgeColor = new THREE.Color("#4e6ef2");
+      const color = centerColor.lerp(
+        edgeColor,
+        this.radiusArray[i] / this.params.radius
+      );
+      colors[i * 3 + 0] = color.r;
+      colors[i * 3 + 1] = color.g;
+      colors[i * 3 + 2] = color.b;
+    }
+    return colors;
   }
 
-  private setPickPosition(event: PointerEvent) {
-    this.pickPosition.x = event.clientX;
-    this.pickPosition.y = event.clientY;
+  private createGUI() {
+    this.gui
+      .add(this.params, "size")
+      .min(0.01)
+      .max(0.1)
+      .step(0.001)
+      .onChange(this.createParticles.bind(this));
+    this.gui
+      .add(this.params, "count")
+      .min(100)
+      .max(100000)
+      .step(100)
+      .onChange(this.createParticles.bind(this));
+    this.gui
+      .add(this.params, "radius")
+      .min(1)
+      .max(30)
+      .step(1)
+      .onChange(this.createParticles.bind(this));
+    this.gui
+      .add(this.params, "split")
+      .min(1)
+      .max(10)
+      .step(1)
+      .onChange(this.createParticles.bind(this));
+    this.gui
+      .add(this.params, "spin")
+      .min(-1)
+      .max(1)
+      .step(0.01)
+      .onChange(this.createParticles.bind(this));
+    this.gui
+      .add(this.params, "randomness")
+      .min(0)
+      .max(10)
+      .step(0.01)
+      .onChange(this.createParticles.bind(this));
+    this.gui
+      .add(this.params, "randomnessPower")
+      .min(1)
+      .max(10)
+      .step(1)
+      .onChange(this.createParticles.bind(this));
   }
 
   resize() {}
 
-  update() {
-    if (this.countryData.length === 0) return;
-
-    this.updateLabels();
-  }
-
-  updateLabels() {
-    this.normalMatrix.getNormalMatrix(this.camera.instance.matrixWorldInverse);
-
-    for (const countryData of this.countryData) {
-      const { position, elem } = countryData;
-
-      this.tempV.copy(position);
-      this.tempV.applyMatrix3(this.normalMatrix);
-
-      this.cameraToPoint.copy(position);
-      this.cameraToPoint
-        .applyMatrix4(this.camera.instance.matrixWorldInverse)
-        .normalize();
-
-      const dot = this.tempV.dot(this.cameraToPoint);
-
-      if (dot < -0.5 && this.pickedCountry === null) {
-        elem.style.display = "";
-      } else if (
-        dot < -0.5 &&
-        this.pickedCountry !== null &&
-        this.pickedCountry.name === countryData.name
-      ) {
-        elem.style.display = "";
-      } else {
-        elem.style.display = "none";
-        continue;
-      }
-
-      this.tempV.copy(position);
-      this.tempV.project(this.camera.instance);
-
-      elem.style.transform = `translate(-50%, -50%) translate(${
-        (this.tempV.x * 0.5 + 0.5) * this.experience.config.width
-      }px, ${(this.tempV.y * -0.5 + 0.5) * this.experience.config.height}px)`;
-    }
-  }
+  update() {}
 }

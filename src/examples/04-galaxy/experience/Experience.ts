@@ -75,6 +75,7 @@ export default class Experience {
 
   private update() {
     this.stats.update();
+    this.world.update();
     this.renderer.update();
   }
 }
