@@ -6,6 +6,7 @@ export class Camera {
   static FOV = 75;
   static NEAR = 0.1;
   static FAR = 1000;
+  static CAMERA_POSITION: [number, number, number] = [4, 0, 0];
 
   instance: THREE.PerspectiveCamera;
   experience: Experience;
@@ -29,7 +30,7 @@ export class Camera {
       Camera.NEAR,
       Camera.FAR
     );
-    camera.position.set(0, 2, 2);
+    camera.position.set(...Camera.CAMERA_POSITION);
     camera.lookAt(0, 0, 0);
     this.scene.add(camera);
     return camera;

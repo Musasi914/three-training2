@@ -13,17 +13,17 @@ export default class Enviroment {
 
     this.loader = new HDRLoader();
 
-    // this.setBackground();
+    this.setBackground();
     // this.setAmbientLight();
     this.setDirectionalLight();
   }
 
-  // private async setBackground() {
-  //   const envMap = await this.loader.loadAsync("/enviromentMaps/sogen/2k.hdr");
-  //   envMap.mapping = THREE.EquirectangularReflectionMapping;
-  //   this.scene.environment = envMap;
-  //   this.scene.background = envMap;
-  // }
+  private async setBackground() {
+    const envMap = await this.loader.loadAsync("/enviromentMaps/sogen/2k.hdr");
+    envMap.mapping = THREE.EquirectangularReflectionMapping;
+    this.scene.environment = envMap;
+    this.scene.background = envMap;
+  }
 
   // private async setBackground() {
   //   const loader = new THREE.CubeTextureLoader().setPath(
@@ -47,8 +47,9 @@ export default class Enviroment {
   // }
 
   private setDirectionalLight() {
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
-    directionalLight.position.set(0.5, 2.5, -5);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 4);
+    directionalLight.position.set(8, 0, 0);
+    directionalLight.castShadow = true;
     this.scene.add(directionalLight);
   }
 }
