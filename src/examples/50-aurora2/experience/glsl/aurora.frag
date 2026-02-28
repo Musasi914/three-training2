@@ -24,15 +24,15 @@ float tri(float x){ return clamp(abs(fract(x)-.5), 0.01, 0.49); }
 vec2  tri2(vec2 p){ return vec2(tri(p.x)+tri(p.y), tri(p.y+tri(p.x))); }
 
 float triNoise2d(vec2 p, mat2 rot) {
-  float z  = 1.8;
-  float z2 = 2.5;
+  float z  = 1.8; // 振幅 ループで小さくなる
+  float z2 = 2.5; // 変異のスケール
   float rz = 0.0;
 
-  p *= get2dRotateMatrix(p.x * 0.06);
-  vec2 bp = p;
+  p *= get2dRotateMatrix(p.x * 0.06); // 位置によって回転角が変わる 曲がったカーテン状のパターンを作る初期変形
+  vec2 bp = p; // 変異計算用の座標
 
   for (int i = 0; i < AURORA_OCTAVES; i++) {
-    vec2 dg = tri2(bp * 1.85) * 0.75;
+    vec2 dg = tri2(bp * 1.85) * 0.75; // bp座標で三角波ノイズを評価し、変位ベクトルdgを得る
     dg *= rot;
     p -= dg / z2;
 
