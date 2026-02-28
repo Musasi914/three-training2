@@ -28,9 +28,26 @@
       #labels > div:hover {
         color: red;
       }
+      .btns {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        display: flex;
+        gap: 10px;
+        z-index: 100;
+
+        button {
+          padding: 10px 20px;
+          cursor: pointer;
+        }
+      }
     </style>
   </head>
   <body>
+    <div class="btns">
+      <button id="btn-start">ひゅー</button>
+      <button id="btn-explosion">どん</button>
+    </div>
     <div id="canvasWrapper"><div id="labels"></div></div>
     <script type="module" src="./main.ts"></script>
   </body>

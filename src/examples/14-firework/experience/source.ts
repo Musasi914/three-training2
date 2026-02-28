@@ -6,15 +6,13 @@ export type Source = {
 
 export const sources: Source[] = [
   {
-    name: "envMap",
-    type: "cubeTexture",
-    path: [
-      "/enviromentMaps/town/px.jpg",
-      "/enviromentMaps/town/nx.jpg",
-      "/enviromentMaps/town/py.jpg",
-      "/enviromentMaps/town/ny.jpg",
-      "/enviromentMaps/town/pz.jpg",
-      "/enviromentMaps/town/nz.jpg",
-    ],
+    name: "country-outlines",
+    type: "texture",
+    path: "/earth/country-outlines-4k.png",
+  },
+  {
+    name: "country-index",
+    type: "texture",
+    path: "/earth/country-index-texture.png",
   },
 ];

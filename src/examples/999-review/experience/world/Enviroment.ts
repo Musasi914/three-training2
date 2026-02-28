@@ -19,7 +19,9 @@ export default class Enviroment {
   }
 
   private async setBackground() {
-    const envMap = await this.loader.loadAsync("/enviromentMaps/sogen/2k.hdr");
+    const envMap = await this.loader.loadAsync(
+      "/enviromentMaps/night/rogland_clear_night_2k.hdr"
+    );
     envMap.mapping = THREE.EquirectangularReflectionMapping;
     this.scene.environment = envMap;
     this.scene.background = envMap;

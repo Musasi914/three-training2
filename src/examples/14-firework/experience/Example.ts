@@ -1,59 +1,34 @@
+// import { GPUComputationRenderer, type Variable } from 'three/addons/misc/GPUComputationRenderer.js';
 import Experience from "./Experience";
 import * as THREE from "three";
-import vertexShader from "./glsl/firework.vert";
-import fragmentShader from "./glsl/firework.frag";
+import vertexShader from "./glsl/plane.vert";
+import fragmentShader from "./glsl/plane.frag";
 import gsap from "gsap";
 
 export default class Example {
   experience: Experience;
-  scene: Experience["scene"];
   gui: Experience["gui"];
+  scene: Experience["scene"];
+  renderer: Experience["renderer"];
+  camera: Experience["camera"];
   resource: Experience["resource"];
-  material: THREE.ShaderMaterial | null = null;
+
+  material!: THREE.ShaderMaterial;
+
+  params = {
+    count: 2000,
+    radius: 30,
+    height: 30,
+  };
 
   constructor() {
     this.experience = Experience.getInstance();
-    this.scene = this.experience.scene;
     this.gui = this.experience.gui;
+    this.scene = this.experience.scene;
+    this.renderer = this.experience.renderer;
+    this.camera = this.experience.camera;
     this.resource = this.experience.resource;
 
-    this.createFirework(300, [0.0, 0.0, 0.0], 1);
-
-    window.addEventListener("click", () => {
-      this.createFirework(300, [0.0, 0.0, 0.0], 1);
-    });
-  }
-
-  private createFirework(count: number, position: number[], radius: number) {
-    const geometry = new THREE.BufferGeometry();
-    const positionArray = new Float32Array(count * 3);
-    const randomArray = new Float32Array(count);
-    const randomTimeArray = new Float32Array(count);
-    for (let i = 0; i < count; i++) {
-      const i3 = i * 3;
-      const customRadius = radius + Math.random() * 0.1;
-      const theta = Math.acos(2 * Math.random() - 1);
-      const phi = Math.random() * 2 * Math.PI;
-      const rSinTheta = customRadius * Math.sin(theta);
-      positionArray[i3 + 0] = rSinTheta * Math.cos(phi);
-      positionArray[i3 + 1] = rSinTheta * Math.sin(phi);
-      positionArray[i3 + 2] = customRadius * Math.cos(theta);
-
-      randomArray[i] = Math.random() * 0.5 + 0.5;
-      randomTimeArray[i] = Math.random() * 0.5 + 1;
-    }
-    geometry.setAttribute(
-      "position",
-      new THREE.Float32BufferAttribute(positionArray, 3)
-    );
-    geometry.setAttribute(
-      "random",
-      new THREE.Float32BufferAttribute(randomArray, 1)
-    );
-    geometry.setAttribute(
-      "randomTime",
-      new THREE.Float32BufferAttribute(randomTimeArray, 1)
-    );
     this.material = new THREE.ShaderMaterial({
       vertexShader,
       fragmentShader,
@@ -64,41 +39,94 @@ export default class Example {
             this.experience.config.height
           ),
         },
-        uColor: {
-          value: new THREE.Color("#8affff"),
-        },
-        uProgress: {
-          value: 0,
-        },
+        uProgress: { value: 0 },
+        uHeight: { value: this.params.height },
       },
       transparent: true,
       depthWrite: false,
       blending: THREE.AdditiveBlending,
     });
 
-    const mesh = new THREE.Points(geometry, this.material);
-    mesh.position.copy(new THREE.Vector3(...position));
-    this.scene.add(mesh);
-
-    gsap.to(this.material.uniforms.uProgress, {
-      value: 1,
-      duration: 3,
-      ease: "none",
-      onComplete: () => {
-        this.scene.remove(mesh);
-        geometry.dispose();
-        this.material?.dispose();
-      },
+    const startBtn = document.getElementById("btn-start");
+    // const explosionBtn = document.getElementById("btn-explosion");
+    startBtn?.addEventListener("click", () => {
+      this.createFireWork();
     });
   }
 
-  resize() {
-    if (this.material && this.material.uniforms.uResolution) {
-      this.material.uniforms.uResolution.value.set(
-        this.experience.config.width,
-        this.experience.config.height
-      );
+  private createFireWork() {
+    const geometry = new THREE.BufferGeometry();
+    const positionArray = new Float32Array(3 * this.params.count);
+    const randomArray = new Float32Array(this.params.count);
+    const randomTimeArray = new Float32Array(this.params.count);
+    const tailOffsetArray = new Float32Array(this.params.count);
+
+    for (let i = 0; i < this.params.count; i++) {
+      const theta = Math.asin(Math.random() * 2 - 1);
+      const phi = Math.random() * 2 * Math.PI;
+
+      const radius =
+        this.params.radius + Math.random() * this.params.radius * 0.1;
+
+      const rSinTheta = radius * Math.sin(theta);
+      const rCosTheta = radius * Math.cos(theta);
+
+      const i3 = i * 3;
+      positionArray[i3 + 0] = rCosTheta * Math.cos(phi);
+      positionArray[i3 + 1] = rCosTheta * Math.sin(phi);
+      positionArray[i3 + 2] = rSinTheta;
+
+      randomArray[i] = Math.random() * 0.5 + 0.5;
+      randomTimeArray[i] = Math.random() * 0.1 + 1;
+      tailOffsetArray[i] = Math.pow(Math.random(), 4.0);
     }
+
+    geometry.setAttribute(
+      "aRandom",
+      new THREE.Float32BufferAttribute(randomArray, 1)
+    );
+    geometry.setAttribute(
+      "position",
+      new THREE.Float32BufferAttribute(positionArray, 3)
+    );
+    geometry.setAttribute(
+      "aRandomTime",
+      new THREE.Float32BufferAttribute(randomTimeArray, 1)
+    );
+    geometry.setAttribute(
+      "aTailOffset",
+      new THREE.Float32BufferAttribute(tailOffsetArray, 1)
+    );
+
+    const material = this.material.clone();
+
+    const points = new THREE.Points(geometry, material);
+    points.position.set(Math.random() * 100 - 50, 0, Math.random() * 100 - 50);
+    this.scene.add(points);
+
+    gsap.fromTo(
+      material.uniforms.uProgress,
+      {
+        value: 0,
+      },
+      {
+        value: 1,
+        duration: 5,
+        ease: "none",
+        onComplete: () => {
+          material.dispose();
+          geometry.dispose();
+          this.scene.remove(points);
+        },
+      }
+    );
+  }
+
+  resize() {
+    this.material.uniforms.uResolution.value.set(
+      this.experience.config.width,
+      this.experience.config.height
+    );
   }
 
   update() {}

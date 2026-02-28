@@ -2,18 +2,17 @@ import * as THREE from "three";
 import Experience from "../Experience";
 import { OrbitControls } from "three/examples/jsm/Addons.js";
 
-const FOV = 75;
-const NEAR = 0.1;
-const FAR = 100;
-const CAMERA_POSITION: [number, number, number] = [0, 0, 2];
-
 export class Camera {
+  static FOV = 75;
+  static NEAR = 0.1;
+  static FAR = 1000;
+  static CAMERA_POSITION: [number, number, number] = [0, 50, 75];
+
   instance: THREE.PerspectiveCamera;
   experience: Experience;
   scene: Experience["scene"];
   config: Experience["config"];
   controls: OrbitControls;
-  // controls: MapControls;
 
   constructor() {
     this.experience = Experience.getInstance();
@@ -26,12 +25,13 @@ export class Camera {
 
   private setInstance() {
     const camera = new THREE.PerspectiveCamera(
-      FOV,
+      Camera.FOV,
       this.config.width / this.config.height,
-      NEAR,
-      FAR
+      Camera.NEAR,
+      Camera.FAR
     );
-    camera.position.set(...CAMERA_POSITION);
+    camera.position.set(...Camera.CAMERA_POSITION);
+    camera.lookAt(0, 0, 0);
     this.scene.add(camera);
     return camera;
   }
@@ -41,6 +41,7 @@ export class Camera {
       this.instance,
       this.experience.canvasWrapper
     );
+    controls.autoRotate = true;
     return controls;
   }
 

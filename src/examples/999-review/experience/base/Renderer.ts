@@ -1,3 +1,8 @@
+import {
+  EffectComposer,
+  RenderPass,
+  UnrealBloomPass,
+} from "three/examples/jsm/Addons.js";
 import Experience from "../Experience";
 import * as THREE from "three";
 
@@ -6,6 +11,7 @@ export class Renderer {
   experience: Experience;
   canvasWrapper: Experience["canvasWrapper"];
   config: Experience["config"];
+  composer: EffectComposer;
 
   constructor() {
     this.experience = Experience.getInstance();
@@ -13,6 +19,31 @@ export class Renderer {
     this.config = this.experience.config;
 
     this.instance = this.setInstance();
+
+    const renderTarget = new THREE.WebGLRenderTarget(
+      this.config.width,
+      this.config.height,
+      {
+        samples: this.config.pixelRatio === 1 ? 2 : 0,
+      }
+    );
+    this.composer = new EffectComposer(this.instance, renderTarget);
+    this.composer.setPixelRatio(this.config.pixelRatio);
+    this.composer.setSize(this.config.width, this.config.height);
+    this.composer.addPass(
+      new RenderPass(this.experience.scene, this.experience.camera.instance)
+    );
+
+    const bloomPass = new UnrealBloomPass(
+      new THREE.Vector2(
+        this.config.width * this.config.pixelRatio,
+        this.config.height * this.config.pixelRatio
+      ),
+      3,
+      0.8,
+      0.5
+    );
+    this.composer.addPass(bloomPass);
   }
 
   private setInstance() {
@@ -40,12 +71,11 @@ export class Renderer {
       this.experience.scene,
       this.experience.camera.instance
     );
+    this.composer.setPixelRatio(this.config.pixelRatio);
+    this.composer.setSize(this.config.width, this.config.height);
   }
 
   update() {
-    this.instance.render(
-      this.experience.scene,
-      this.experience.camera.instance
-    );
+    this.composer.render(this.experience.time.delta);
   }
 }

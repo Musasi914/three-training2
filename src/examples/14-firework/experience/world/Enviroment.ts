@@ -1,29 +1,46 @@
-// import { HDRLoader } from "three/addons/loaders/HDRLoader.js";
+import { HDRLoader } from "three/examples/jsm/Addons.js";
 import Experience from "../Experience";
 import * as THREE from "three";
 
-export class Environment {
+export default class Enviroment {
   experience: Experience;
   scene: Experience["scene"];
-  renderer: Experience["renderer"];
+  loader: HDRLoader;
 
   constructor() {
     this.experience = Experience.getInstance();
     this.scene = this.experience.scene;
-    this.renderer = this.experience.renderer;
 
-    // this.setBackground();
+    this.loader = new HDRLoader();
+
+    this.setBackground();
     // this.setAmbientLight();
     this.setDirectionalLight();
-    // this.setSpotLight();
+  }
+
+  private async setBackground() {
+    const envMap = await this.loader.loadAsync(
+      "/enviromentMaps/night/rogland_clear_night_2k.hdr"
+    );
+    envMap.mapping = THREE.EquirectangularReflectionMapping;
+    this.scene.environment = envMap;
+    this.scene.background = envMap;
   }
 
   // private async setBackground() {
-  //   const loader = new HDRLoader();
-  //   const envMap = await loader.loadAsync("/enviromentMaps/2k.hdr");
-  //   envMap.mapping = THREE.EquirectangularReflectionMapping;
-  //   this.scene.environment = envMap;
-  //   this.scene.background = envMap;
+  //   const loader = new THREE.CubeTextureLoader().setPath(
+  //     "/enviromentMaps/town/"
+  //   );
+  //   const cubeTexture = await loader.loadAsync([
+  //     "px.jpg",
+  //     "nx.jpg",
+  //     "py.jpg",
+  //     "ny.jpg",
+  //     "pz.jpg",
+  //     "nz.jpg",
+  //   ]);
+  //   this.scene.background = cubeTexture;
+  //   this.scene.environment = cubeTexture;
   // }
 
   // private setAmbientLight() {
@@ -32,22 +49,9 @@ export class Environment {
   // }
 
   private setDirectionalLight() {
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 3);
-    directionalLight.position.set(0.25, 2, -2.25);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 4);
+    directionalLight.position.set(8, 0, 0);
     directionalLight.castShadow = true;
-    directionalLight.shadow.mapSize.width = 1024;
-    directionalLight.shadow.mapSize.height = 1024;
-    // directionalLight.shadow.camera.near = 0.5;
-    directionalLight.shadow.camera.far = 15;
-    // directionalLight.shadow.camera.left = -7;
-    // directionalLight.shadow.camera.right = 7;
-    // directionalLight.shadow.camera.top = 7;
-    // directionalLight.shadow.camera.bottom = -7;
     this.scene.add(directionalLight);
   }
-
-  // private setSpotLight() {
-  //   const spotLight = new THREE.SpotLight(0xffffff, 60);
-  //   this.scene.add(spotLight);
-  // }
 }

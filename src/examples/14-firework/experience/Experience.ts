@@ -8,7 +8,7 @@ import { World } from "./world/World";
 import { GUI } from "lil-gui";
 import Stats from "three/examples/jsm/libs/stats.module.js";
 import { sources } from "./source";
-import { Environment } from "./world/Enviroment";
+import Enviroment from "./world/Enviroment";
 
 export default class Experience {
   static instance: Experience;
@@ -22,19 +22,23 @@ export default class Experience {
   gui: GUI;
   stats: Stats;
   scene: THREE.Scene;
+  pickingScene: THREE.Scene;
   camera: Camera;
   renderer: Renderer;
   resource: Resource;
-  enviroment: Environment;
   world: World;
   config: {
     width: number;
     height: number;
     pixelRatio: number;
   };
+  enviroment: Enviroment;
 
   constructor(canvasWrapper: HTMLDivElement) {
     Experience.instance = this;
+    this.scene = new THREE.Scene();
+    this.pickingScene = new THREE.Scene();
+    this.pickingScene.background = new THREE.Color(0x000000);
     this.canvasWrapper = canvasWrapper;
 
     this.size = new Size();
@@ -48,13 +52,12 @@ export default class Experience {
 
     this.config = this.setConfig();
 
-    this.scene = new THREE.Scene();
     this.camera = new Camera();
     this.renderer = new Renderer();
     this.resource = new Resource(sources);
 
-    this.enviroment = new Environment();
     this.world = new World();
+    this.enviroment = new Enviroment();
 
     this.size.on("resize", this.resize.bind(this));
     this.time.on("tick", this.update.bind(this));
@@ -71,9 +74,9 @@ export default class Experience {
 
   private resize() {
     this.config = this.setConfig();
-    this.world.resize();
     this.camera.resize();
     this.renderer.resize();
+    this.world.resize();
   }
 
   private update() {
