@@ -338,6 +338,12 @@ export const examples: ExampleInfo[] = [
     path: "/src/examples/54-shader-prac/index.html",
   },
   {
+    id: "55-land",
+    name: "55. Land",
+    description: "Land",
+    path: "/src/examples/55-land/index.html",
+  },
+  {
     id: "999-review",
     name: "Review",
     description: "Review",

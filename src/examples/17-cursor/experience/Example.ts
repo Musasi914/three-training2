@@ -62,7 +62,7 @@ export default class Example {
     texture.magFilter = THREE.NearestFilter;
     texture.generateMipmaps = false;
 
-    this.planeGeometry = new THREE.PlaneGeometry(3, 3, 64, 64);
+    this.planeGeometry = new THREE.PlaneGeometry(3, 3, 256, 256);
     this.planeGeometry.setIndex(null);
     this.planeGeometry.deleteAttribute("normal");
     this.material = new THREE.ShaderMaterial({
