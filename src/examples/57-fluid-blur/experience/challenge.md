@@ -1,0 +1,4 @@
+- computePressure を 1px 間隔にすると？
+- divergence と computeProject の uDt を消してみる。
+- パラメーターを gui 化
+- divergence は gpucomputationrenerer 使ってなかったけど、他にも消せるのでは？

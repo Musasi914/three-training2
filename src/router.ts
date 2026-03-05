@@ -344,6 +344,18 @@ export const examples: ExampleInfo[] = [
     path: "/src/examples/55-land/index.html",
   },
   {
+    id: "56-image-transform-review",
+    name: "56. Image Transform Review",
+    description: "Image Transform Review",
+    path: "/src/examples/56-image-transform-review/index.html",
+  },
+  {
+    id: "57-fluid-blur",
+    name: "57. Fluid Blur",
+    description: "Fluid Blur",
+    path: "/src/examples/57-fluid-blur/index.html",
+  },
+  {
     id: "999-review",
     name: "Review",
     description: "Review",

@@ -1,4 +1,3 @@
-// import { EffectComposer, RenderPass } from "three/examples/jsm/Addons.js";
 import Experience from "../Experience";
 import * as THREE from "three";
 
@@ -7,7 +6,6 @@ export class Renderer {
   experience: Experience;
   canvasWrapper: Experience["canvasWrapper"];
   config: Experience["config"];
-  // composer: EffectComposer;
 
   constructor() {
     this.experience = Experience.getInstance();
@@ -15,37 +13,20 @@ export class Renderer {
     this.config = this.experience.config;
 
     this.instance = this.setInstance();
-
-    // const renderTarget = new THREE.WebGLRenderTarget(
-    //   this.config.width,
-    //   this.config.height,
-    //   {
-    //     samples: this.config.pixelRatio === 1 ? 2 : 0,
-    //   }
-    // );
-    // this.composer = new EffectComposer(this.instance, renderTarget);
-    // this.composer.setPixelRatio(this.config.pixelRatio);
-    // this.composer.setSize(this.config.width, this.config.height);
-    // this.composer.addPass(
-    //   new RenderPass(this.experience.scene, this.experience.camera.instance)
-    // );
   }
 
   private setInstance() {
     const renderer = new THREE.WebGLRenderer({
-      alpha: false,
-      antialias: true,
+      alpha: true,
+      antialias: this.config.pixelRatio === 1,
     });
 
     this.canvasWrapper.appendChild(renderer.domElement);
-    renderer.setClearColor(0x333333, 1);
     renderer.setPixelRatio(this.config.pixelRatio);
     renderer.setSize(this.config.width, this.config.height);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 0.5;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
     return renderer;
   }
 
@@ -57,12 +38,9 @@ export class Renderer {
       this.experience.scene,
       this.experience.camera.instance
     );
-    // this.composer.setPixelRatio(this.config.pixelRatio);
-    // this.composer.setSize(this.config.width, this.config.height);
   }
 
   update() {
-    // this.composer.render(this.experience.time.delta);
     this.instance.render(
       this.experience.scene,
       this.experience.camera.instance

@@ -19,4 +19,3 @@ export class Example {
     this.output.update();
   }
 }
-
