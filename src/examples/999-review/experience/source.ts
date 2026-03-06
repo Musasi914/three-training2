@@ -8,6 +8,11 @@ export const sources: Source[] = [
   {
     name: "img",
     type: "texture",
-    path: "/landscape/a.webp",
+    path: "/portrait/2.webp",
+  },
+  {
+    name: "heightmap",
+    type: "texture",
+    path: "/portrait/2-height.jpg",
   },
 ];

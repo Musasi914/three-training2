@@ -15,7 +15,7 @@ export default class Enviroment {
     this.loader = new HDRLoader();
 
     // this.setBackground();
-    // this.setAmbientLight();
+    this.setAmbientLight();
     this.setDirectionalLight();
   }
 
@@ -44,10 +44,10 @@ export default class Enviroment {
   //   this.scene.environment = cubeTexture;
   // }
 
-  // private setAmbientLight() {
-  //   const ambientLight = new THREE.AmbientLight(0xffffff, 2);
-  //   this.scene.add(ambientLight);
-  // }
+  private setAmbientLight() {
+    const ambientLight = new THREE.AmbientLight(0xffffff, 10);
+    this.scene.add(ambientLight);
+  }
 
   private setDirectionalLight() {
     this.directionalLight = new THREE.DirectionalLight(0xffffff, 4);

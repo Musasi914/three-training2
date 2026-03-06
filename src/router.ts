@@ -356,6 +356,12 @@ export const examples: ExampleInfo[] = [
     path: "/src/examples/57-fluid-blur/index.html",
   },
   {
+    id: "58-gpgpu-particle-types",
+    name: "58. GPGPU Particle Types",
+    description: "フォント粒子 + GPGPU + ポインターインタラクション",
+    path: "/src/examples/58-gpgpu-particle-types/index.html",
+  },
+  {
     id: "999-review",
     name: "Review",
     description: "Review",
