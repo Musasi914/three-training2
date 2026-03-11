@@ -149,7 +149,12 @@ export default class Example {
       IMG_CANVAS_SIZE * 0.5
     );
 
-    const imageData = context.getImageData(0, 0, IMG_CANVAS_SIZE, IMG_CANVAS_SIZE).data;
+    const imageData = context.getImageData(
+      0,
+      0,
+      IMG_CANVAS_SIZE,
+      IMG_CANVAS_SIZE
+    ).data;
     const activePositions: Array<[number, number]> = [];
     const activeColors: Array<[number, number, number, number]> = [];
     const pixelCount = imageData.length / 4;
@@ -163,7 +168,10 @@ export default class Example {
 
       const col = i % IMG_CANVAS_SIZE;
       const row = Math.floor(i / IMG_CANVAS_SIZE);
-      activePositions.push([col - IMG_CANVAS_SIZE * 0.5, -(row - IMG_CANVAS_SIZE * 0.5)]);
+      activePositions.push([
+        col - IMG_CANVAS_SIZE * 0.5,
+        -(row - IMG_CANVAS_SIZE * 0.5),
+      ]);
       activeColors.push([
         imageData[i4 + 0],
         imageData[i4 + 1],
@@ -288,7 +296,10 @@ export default class Example {
       "particleIndex",
       new THREE.BufferAttribute(particleIndices, 1)
     );
-    geometry.setAttribute("randomValue", new THREE.BufferAttribute(randomValues, 4));
+    geometry.setAttribute(
+      "randomValue",
+      new THREE.BufferAttribute(randomValues, 4)
+    );
 
     const material = new THREE.RawShaderMaterial({
       vertexShader: particleVert,
@@ -316,7 +327,9 @@ export default class Example {
     const x = (event.clientX - rect.left - rect.width * 0.5) / this.drawScale;
     const y = -(event.clientY - rect.top - rect.height * 0.5) / this.drawScale;
     this.pointerPos.set(x, y);
-    this.positionVariable.material.uniforms.pointerPos.value.copy(this.pointerPos);
+    this.positionVariable.material.uniforms.pointerPos.value.copy(
+      this.pointerPos
+    );
     this.pointerActive = 1;
   };
 
@@ -343,7 +356,6 @@ export default class Example {
       (POINT_SIZE_BASIS / IMG_CANVAS_SIZE) *
       drawAreaSize *
       this.experience.config.pixelRatio;
-
     this.positionVariable.material.uniforms.pointerForceRadius.value =
       (POINTER_RADIUS_BASIS / IMG_CANVAS_SIZE) *
       drawAreaSize *
@@ -354,7 +366,8 @@ export default class Example {
     this.pointerActive *= 0.92;
     this.transitionValue *= 0.9;
 
-    this.positionVariable.material.uniforms.pointerActive.value = this.pointerActive;
+    this.positionVariable.material.uniforms.pointerActive.value =
+      this.pointerActive;
     this.positionVariable.material.uniforms.transitionValue.value =
       this.transitionValue;
 

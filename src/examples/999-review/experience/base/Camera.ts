@@ -3,10 +3,10 @@ import Experience from "../Experience";
 import { OrbitControls } from "three/examples/jsm/Addons.js";
 
 export class Camera {
-  static FOV = 45;
-  static NEAR = 0.01;
-  static FAR = 50;
-  static CAMERA_POSITION: [number, number, number] = [0, 1, 10];
+  static FOV = 75;
+  static NEAR = 1;
+  static FAR = 1000;
+  static CAMERA_POSITION: [number, number, number] = [0, 0, 700];
 
   instance: THREE.PerspectiveCamera;
   experience: Experience;
