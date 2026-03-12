@@ -362,6 +362,12 @@ export const examples: ExampleInfo[] = [
     path: "/src/examples/58-gpgpu-particle-types/index.html",
   },
   {
+    id: "59-u-alpha",
+    name: "59. U Alpha",
+    description: "logoアルファマスク + GLSL時間変化",
+    path: "/src/examples/59-u-alpha/index.html",
+  },
+  {
     id: "999-review",
     name: "Review",
     description: "Review",

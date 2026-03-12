@@ -6,7 +6,7 @@ export class Camera {
   static FOV = 75;
   static NEAR = 1;
   static FAR = 1000;
-  static CAMERA_POSITION: [number, number, number] = [0, 0, 700];
+  static CAMERA_POSITION: [number, number, number] = [0, 0, 600];
 
   instance: THREE.PerspectiveCamera;
   experience: Experience;
@@ -41,7 +41,7 @@ export class Camera {
       this.instance,
       this.experience.canvasWrapper
     );
-    controls.autoRotate = true;
+    // controls.autoRotate = true;
     return controls;
   }
 
