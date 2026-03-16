@@ -14,6 +14,7 @@ export default class Example {
     uResolution: new THREE.Uniform(new THREE.Vector3()),
     uMouse: new THREE.Uniform(new THREE.Vector2()),
   };
+  material: THREE.ShaderMaterial;
 
   constructor() {
     this.experience = Experience.getInstance();
@@ -24,7 +25,7 @@ export default class Example {
     this.resource = this.experience.resource;
 
     const plane = new THREE.PlaneGeometry(2, 2);
-    const material = new THREE.ShaderMaterial({
+    this.material = new THREE.ShaderMaterial({
       fragmentShader,
       uniforms: this.uniforms,
     });
@@ -33,7 +34,7 @@ export default class Example {
       this.renderer.domElement.height,
       1
     );
-    this.scene.add(new THREE.Mesh(plane, material));
+    this.scene.add(new THREE.Mesh(plane, this.material));
 
     window.addEventListener("mousemove", this.onMousemove.bind(this));
   }
@@ -46,9 +47,10 @@ export default class Example {
   }
 
   resize() {
-    this.uniforms.uResolution.value.set(
+    this.material.uniforms.uResolution.value = new THREE.Vector3(
       this.renderer.domElement.width,
-      this.renderer.domElement.height
+      this.renderer.domElement.height,
+      0.0
     );
   }
 
