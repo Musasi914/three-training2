@@ -1,6 +1,6 @@
 import Experience from "./Experience";
 import * as THREE from "three";
-import fragmentShader from "./glsl/10-rand.frag";
+import fragmentShader from "./glsl/11-noise.frag";
 
 export default class Example {
   experience: Experience;
