@@ -41,11 +41,20 @@ body {
 .examples-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  align-items: start;
+  grid-auto-rows: auto;
   gap: 2rem;
+  grid-auto-flow: dense;
+  /* column-width: 300px;
+  column-gap: 2rem; */
   margin-top: 2rem;
 }
 
 .example-card {
+  /* display: inline-block;
+  width: 100%;
+  break-inside: avoid;
+  margin-bottom: 2rem; */
   background-color: #1a1a1a;
   border: 1px solid #333;
   border-radius: 8px;
@@ -54,6 +63,11 @@ body {
   cursor: pointer;
   text-decoration: none;
   color: inherit;
+  grid-row: span 1;
+}
+
+.example-card-with-img {
+  grid-row: span 2;
 }
 
 .example-card:hover {
@@ -70,6 +84,21 @@ body {
 .example-card p {
   color: rgba(255, 255, 255, 0.7);
   margin-bottom: 1rem;
+}
+
+.example-card-img-wrapper {
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  background-color: #252525;
+}
+
+.example-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .example-link {

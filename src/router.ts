@@ -7,6 +7,7 @@ export type ExampleInfo = {
   description?: string;
   path: string;
   hide?: true;
+  imgPath?: string;
 };
 
 export const examples: ExampleInfo[] = [
@@ -15,6 +16,7 @@ export const examples: ExampleInfo[] = [
     name: "01. mixamoアニメーション",
     description: "モデルとアニメーション",
     path: "/src/examples/01-animation/index.html",
+    imgPath: "/thumbnails/01.webp",
   },
   {
     id: "02-mouse",
@@ -33,6 +35,7 @@ export const examples: ExampleInfo[] = [
     name: "04. 銀河",
     description: "銀河",
     path: "/src/examples/04-galaxy/index.html",
+    imgPath: "/thumbnails/04.webp",
   },
   {
     id: "05-woman-sphere",
@@ -42,8 +45,8 @@ export const examples: ExampleInfo[] = [
   },
   {
     id: "06-glsl-practice",
-    name: "06. GLSL Practice with Plane",
-    description: "シェーダーの練習。planeに色々glsl関数使って描画",
+    name: "06. GLSL Practice",
+    description: "シェーダーglsl関数の練習。",
     path: "/src/examples/06-glsl-practice/index.html",
   },
   {
@@ -63,6 +66,7 @@ export const examples: ExampleInfo[] = [
     name: "09. 波パターン",
     description: "waveパターン。背景に面白そう",
     path: "/src/examples/09-wave-improve/index.html",
+    imgPath: "/thumbnails/09.webp",
   },
   {
     id: "10-wave-improved2",
@@ -95,6 +99,7 @@ export const examples: ExampleInfo[] = [
     name: "14. 花火",
     description: "Firework",
     path: "/src/examples/14-firework/index.html",
+    imgPath: "/thumbnails/14.webp",
   },
   {
     id: "15-earth",
@@ -113,6 +118,7 @@ export const examples: ExampleInfo[] = [
     name: "17. Cursorアクション",
     description: "canvas2dを用いてマウス移動でアクションを起こす",
     path: "/src/examples/17-cursor/index.html",
+    imgPath: "/thumbnails/17.webp",
   },
   {
     id: "18-skinnedmesh",
@@ -191,6 +197,7 @@ export const examples: ExampleInfo[] = [
     name: "30. GPGPU-review",
     description: "GPGPU-review",
     path: "/src/examples/30-gpgpu-re/index.html",
+    imgPath: "/thumbnails/30.webp",
   },
   {
     id: "31-movecar",
@@ -263,6 +270,7 @@ export const examples: ExampleInfo[] = [
     name: "42. Water with Ahiru",
     description: "Water with Ahiru",
     path: "/src/examples/42-water-with-ahiru/index.html",
+    imgPath: "/thumbnails/42.webp",
   },
   {
     id: "43-postprocess",
@@ -299,6 +307,7 @@ export const examples: ExampleInfo[] = [
     name: "48. Aurora",
     description: "Aurora",
     path: "/src/examples/48-aurora/index.html",
+    imgPath: "/thumbnails/48.webp",
   },
   {
     id: "49-canvasTexture",
@@ -317,6 +326,7 @@ export const examples: ExampleInfo[] = [
     name: "51. Fluid",
     description: "Fluid",
     path: "/src/examples/51-fluid/index.html",
+    imgPath: "/thumbnails/51.webp",
   },
   {
     id: "52-fluid-simple",
@@ -345,21 +355,24 @@ export const examples: ExampleInfo[] = [
   },
   {
     id: "56-image-transform-review",
-    name: "56. Image Transform Review",
+    name: "56. Image Review",
     description: "Image Transform Review",
     path: "/src/examples/56-image-transform-review/index.html",
+    imgPath: "/thumbnails/56.webp",
   },
   {
     id: "57-fluid-blur",
     name: "57. Fluid Blur",
     description: "Fluid Blur",
     path: "/src/examples/57-fluid-blur/index.html",
+    imgPath: "/thumbnails/57.webp",
   },
   {
     id: "58-gpgpu-particle-types",
     name: "58. GPGPU Particle Types",
     description: "フォント粒子 + GPGPU + ポインターインタラクション",
     path: "/src/examples/58-gpgpu-particle-types/index.html",
+    imgPath: "/thumbnails/58.webp",
   },
   {
     id: "59-u-alpha",
@@ -414,9 +427,14 @@ export class Router {
             // ここでは、各例（example）をHTMLのカードに変換している
             .map(
               (example) => `
-            <a href="${example.path}" class="example-card" data-example-id="${
-                example.id
-              }">
+            <a href="${example.path}" class="example-card ${
+                example.imgPath ? "example-card-with-img" : ""
+              }" data-example-id="${example.id}">
+              ${
+                example.imgPath
+                  ? `<div class="example-card-img-wrapper"><img src="${example.imgPath}" alt="${example.name}" class="example-card-img"></div>`
+                  : ""
+              }
               <h2>${example.name}</h2>
               ${example.description ? `<p>${example.description}</p>` : ""}
             </a>

@@ -6,7 +6,7 @@ export class Camera {
   static FOV = 75;
   static NEAR = 0.1;
   static FAR = 1000;
-  static CAMERA_POSITION: [number, number, number] = [0, 50, 75];
+  static CAMERA_POSITION: [number, number, number] = [0, 70, 100];
 
   instance: THREE.PerspectiveCamera;
   experience: Experience;

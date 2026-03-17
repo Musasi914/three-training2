@@ -39,8 +39,8 @@ export class Renderer {
         this.config.width * this.config.pixelRatio,
         this.config.height * this.config.pixelRatio
       ),
-      3,
-      0.8,
+      1,
+      0.4,
       0.5
     );
     this.composer.addPass(bloomPass);
