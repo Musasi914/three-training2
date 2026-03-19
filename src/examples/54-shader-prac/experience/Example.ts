@@ -1,6 +1,6 @@
 import Experience from "./Experience";
 import * as THREE from "three";
-import fragmentShader from "./glsl/11-noise.frag";
+import fragmentShader from "./glsl/11-snoise.frag";
 
 export default class Example {
   experience: Experience;
@@ -31,8 +31,7 @@ export default class Example {
     });
     this.uniforms.uResolution.value.set(
       this.renderer.domElement.width,
-      this.renderer.domElement.height,
-      1
+      this.renderer.domElement.height
     );
     this.scene.add(new THREE.Mesh(plane, this.material));
 
@@ -49,8 +48,7 @@ export default class Example {
   resize() {
     this.material.uniforms.uResolution.value = new THREE.Vector3(
       this.renderer.domElement.width,
-      this.renderer.domElement.height,
-      0.0
+      this.renderer.domElement.height
     );
   }
 
