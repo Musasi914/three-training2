@@ -1,6 +1,6 @@
 import Experience from "./Experience";
 import * as THREE from "three";
-import fragmentShader from "./glsl/11-snoise.frag";
+import fragmentShader from "./glsl/12-dist.frag";
 
 export default class Example {
   experience: Experience;
@@ -24,6 +24,8 @@ export default class Example {
     this.camera = this.experience.camera;
     this.resource = this.experience.resource;
 
+    this.gui.hide();
+
     const plane = new THREE.PlaneGeometry(2, 2);
     this.material = new THREE.ShaderMaterial({
       fragmentShader,
@@ -39,10 +41,12 @@ export default class Example {
   }
 
   onMousemove(event: MouseEvent) {
-    this.uniforms.uMouse.value.set(
-      event.clientX / this.experience.config.width,
-      1 - event.clientY / this.experience.config.height
-    );
+    requestAnimationFrame(() => {
+      this.uniforms.uMouse.value.set(
+        event.clientX / this.experience.config.width,
+        1 - event.clientY / this.experience.config.height
+      );
+    });
   }
 
   resize() {
