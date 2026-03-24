@@ -10,42 +10,47 @@ vec2 pol2xy(vec2 pol){ // 引数は（ 偏角, 動径 ）
   return pol.y * vec2(cos(pol.x), sin(pol.x));
 }
 
-// vec3 tex(vec2 st) { //極座標が渡ってくる s:偏角 t:動径
-//   float time = uTime * 1.0;
-//   vec3 circ = vec3(0.5 * pol2xy(vec2(time, 0.5)) + 0.5, 1.0);
+// Textures
+vec3 checkerboard(vec2 p,float size){
+  p*=size;
+  vec2 f=fract(p.xy)-0.5;
+  return vec3(f.x*f.y>0.0?1.0:0.0);
+}
 
-//   vec3[3] col3 = vec3[] (
-//     circ.rgb, circ.gbr, circ.brg
-//   );
-//   st.s = st.s / PI + 1.0;
-//   st.s += time * 0.1;
-//   int ind = int(st.s);
-//   vec3 col = mix(col3[ind % 2], col3[(ind + 1) % 2], fract(st.s));
-//   return mix(col3[2], col, st.t);
-// }
-
-vec3 tex(vec2 pol) {
-  vec3 circ = vec3(pol2xy(vec2(uTime, 0.5)) + 0.5, 1.0);
-  vec3[3] col3 = vec3[](
-    circ.xyz, circ.yxz, circ.zyx
-  );
-
-  pol.s = pol.x / PI + 1.0; //(0-2)
-  pol.s += uTime * 0.2;
-  int ind = int(pol.x);
-  vec3 col = mix(col3[ind % 2], col3[(ind + 1) % 2], fract(pol.s));
-  return mix(col3[2], col, pol.t);
+// Object Color
+vec3 objcolor(vec3 p){
+  return checkerboard(p.xz,0.4);
 }
 
 void main() {
-  vec2 pos = gl_FragCoord.xy / uResolution.xy;
-  // pos = 2.0 * pos - vec2(1.0); // -1,1
-  // pos = xy2pol(pos);
-  // gl_FragColor = vec4(tex(pos), 1.0);
+  vec2 uv=gl_FragCoord.xy/uResolution.xy-0.5;
+  uv.x*=uResolution.x/uResolution.y;
 
-  pos = pos * 2.0 - 1.0;
+  //Camera
+  vec3 lookat=vec3(0.0,-2.0,-uTime*16.0);
+  vec3 cam=vec3(sin(uTime*2.0)*4.0,0.0,10.0)+vec3(0.0,0.0,lookat.z);
+  vec3 up=vec3(sin(uTime*2.0+3.14)*0.5,1.0,0.0);
 
-  pos = xy2pol(pos);
+  float camdist=2.0;
+  float camsize=2.0;
+  float maxdist=50.0;
+  float preci=0.001;
 
-  gl_FragColor = vec4(tex(pos), 1.0);
+  vec3 v=cam-lookat;
+  vec3 camx=normalize(cross(up,v))*camsize;
+  vec3 camy=normalize(cross(v,camx))*camsize;
+
+  vec3 campoint=cam-normalize(v)*camdist+
+      camx*uv.x+
+      camy*uv.y;
+
+  vec3 ray=normalize(campoint-cam);
+
+  //Ray tracing plane y=-2.0 and y=1.0
+  float s = (-2.0-campoint.y)/ray.y;
+  if( s<0.0 ) s = (1.0-campoint.y)/ray.y;
+  vec3 p=campoint + ray*s;
+     
+  float fadeout=max(maxdist-s,0.0)/maxdist;
+  gl_FragColor = vec4(objcolor(p)*fadeout, 1.0);
 }

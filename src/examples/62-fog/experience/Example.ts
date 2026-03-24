@@ -1,7 +1,7 @@
 import Experience from "./Experience";
 import * as THREE from "three";
+import fragmentShader from "./glsl/13-fbm.frag";
 // import fragmentShader from "./glsl/shadertoy.frag";
-import fragmentShader from "./glsl/14-fractals.frag";
 
 export default class Example {
   experience: Experience;

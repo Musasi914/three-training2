@@ -381,6 +381,24 @@ export const examples: ExampleInfo[] = [
     path: "/src/examples/59-u-alpha/index.html",
   },
   {
+    id: "60-distance-field",
+    name: "60. Distance Field",
+    description: "Distance Field",
+    path: "/src/examples/60-distance-field/index.html",
+  },
+  {
+    id: "61-elect",
+    name: "61. Elect",
+    description: "Elect",
+    path: "/src/examples/61-elect/index.html",
+  },
+  {
+    id: "62-fog",
+    name: "62. Fog",
+    description: "Fog",
+    path: "/src/examples/62-fog/index.html",
+  },
+  {
     id: "999-review",
     name: "Review",
     description: "Review",
