@@ -27,29 +27,46 @@ vec2 rotate(vec2 uv, float rotation, vec2 mid) {
   );
 }
 
-void main() {
-  // --- UV正規化: 中心(0,0)、アスペクト比補正 [-0.5,0.5] の範囲 ---
-  vec2 uv = gl_FragCoord.xy / uResolution.xy - 0.5;
-  uv.x *= uResolution.x / uResolution.y;
+// void main() {
+//   // --- UV正規化: 中心(0,0)、アスペクト比補正 [-0.5,0.5] の範囲 ---
+//   vec2 uv = gl_FragCoord.xy / uResolution.xy - 0.5;
+//   uv.x *= uResolution.x / uResolution.y;
 
-  // --- 全体の回転（時間でアニメーション）---
-  uv = rotate(uv, uTime, vec2(0.0));
+//   // --- 全体の回転（時間でアニメーション）---
+//   uv = rotate(uv, uTime, vec2(0.0));
 
-  // ちょっと拡大
-  uv *=2.0;
+//   // ちょっと拡大
+//   uv *=2.0;
 
-  // --- フラクタル生成: 折り返し→ずらし→回転 を繰り返す ---
-  // これを繰り返すと、空間が再帰的に細分化されフラクタル模様になる
-  float offset = 0.3;  // ずらし量（反復ごとに小さくなる）
-  for (int i = 0; i < MAX_ITERATIONS; i++) {
-    uv = abs(uv) - offset;           // 折り返してからずらす → 対称な領域を作る
-    uv = rotate(uv, uTime, vec2(0.0));  // 回転で複雑さを加える
-    offset /= 2.1;                  // 次の反復ではより細かく
+//   // --- フラクタル生成: 折り返し→ずらし→回転 を繰り返す ---
+//   // これを繰り返すと、空間が再帰的に細分化されフラクタル模様になる
+//   float offset = 0.3;  // ずらし量（反復ごとに小さくなる）
+//   for (int i = 0; i < MAX_ITERATIONS; i++) {
+//     uv = abs(uv) - offset;           // 折り返してからずらす → 対称な領域を作る
+//     uv = rotate(uv, uTime, vec2(0.0));  // 回転で複雑さを加える
+//     offset /= 2.1;                  // 次の反復ではより細かく
+//   }
+
+//   // --- 円を描く（中心付近の点を白に）---
+//   float dist = length(uv);
+//   float circle = (dist < circleSize) ? 1.0 : 0.0;
+
+//   gl_FragColor = vec4(vec3(circle), 1.0);
+// }
+
+void main(){
+  vec2 st = gl_FragCoord.xy / uResolution.xy - 0.5;
+
+  st = rotate(st, uTime, vec2(0.0));
+
+  float offset = 0.3;
+  for(int i = 0; i < MAX_ITERATIONS; i++) {
+    st = abs(st) - offset;
+    offset /= 2.2;
   }
 
-  // --- 円を描く（中心付近の点を白に）---
-  float dist = length(uv);
+  float dist = length(st);
   float circle = (dist < circleSize) ? 1.0 : 0.0;
-
+  
   gl_FragColor = vec4(vec3(circle), 1.0);
 }

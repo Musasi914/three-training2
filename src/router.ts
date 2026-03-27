@@ -399,6 +399,12 @@ export const examples: ExampleInfo[] = [
     path: "/src/examples/62-fog/index.html",
   },
   {
+    id: "63-raytracing-prac",
+    name: "63. Raytracing Prac",
+    description: "Raytracing Prac",
+    path: "/src/examples/63-raytracing-prac/index.html",
+  },
+  {
     id: "999-review",
     name: "Review",
     description: "Review",
