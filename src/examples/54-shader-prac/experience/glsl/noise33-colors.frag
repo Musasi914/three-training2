@@ -41,8 +41,6 @@ float hash31(vec3 p) {
     // return float(uhash11(n.x+uhash11(n.y+uhash11(n.z))) / float(UINT_MAX)
 }
 
-int channel;
-
 vec3 vnoise33(vec3 p) {
   vec3 i0 = floor(p);
   vec3 f = fract(p);
@@ -64,35 +62,9 @@ vec3 vnoise33(vec3 p) {
   return mix(nxy0, nxy1, f.z);
 }
 
-float vnoise21(vec2 p){
-  vec2 n = floor(p);
-  float[4] v;
-  for (int j = 0; j < 2; j ++){
-      for (int i = 0; i < 2; i++){
-          v[i+2*j] = hash21(n + vec2(i, j));
-      }
-  }
-  vec2 f = fract(p);
-  if (channel == 0){
-      f = f * f * (3.0 -2.0 * f); // Hermite interpolation
-  } else {
-      f = f * f * f * (10.0 - 15.0 * f + 6.0 * f * f); //quintic Hermite interpolation
-  }
-  return mix(mix(v[0], v[1], f[0]), mix(v[2], v[3], f[0]), f[1]);
-}
-
-vec2 grad(vec2 p){
-    float eps = 0.001;
-    return 0.5 * (vec2(
-            vnoise21(p + vec2(eps, 0.0)) - vnoise21(p - vec2(eps, 0.0)),
-            vnoise21(p + vec2(0.0, eps)) - vnoise21(p - vec2(0.0, eps))
-    )) / eps;
-}
-
 void main() {
-  vec2 pos = gl_FragCoord.xy / min(uResolution.x, uResolution.y);
-  channel = int(gl_FragCoord.x * 2.0 / uResolution.x);
-  pos = pos * 3.0 + uTime;
+  vec2 st = gl_FragCoord.xy / min(uResolution.x, uResolution.y);
+  vec3 col = vnoise33(vec3(st * 0.5, uTime * 1.0))  + 0.2;
 
-  gl_FragColor = vec4(vec3(dot(grad(pos), vec2(1.0))), 1.0);
+  gl_FragColor = vec4(col, 1.0);
 }

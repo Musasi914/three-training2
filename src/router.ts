@@ -405,6 +405,12 @@ export const examples: ExampleInfo[] = [
     path: "/src/examples/63-raytracing-prac/index.html",
   },
   {
+    id: "64-spirit",
+    name: "64. The Spirit",
+    description: "Edan Kwan / GPGPU パーティクル + カールノイズ（初期値のみ）",
+    path: "/src/examples/64-spirit/index.html",
+  },
+  {
     id: "999-review",
     name: "Review",
     description: "Review",

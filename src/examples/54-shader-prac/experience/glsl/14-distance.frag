@@ -25,27 +25,29 @@ float distanceToMandelbrot( in vec2 c )
 
     // distance	
 	// d(c) = |Z|·log|Z|/|Z'|
-	float d = 0.5*sqrt(dot(z,z)/dot(dz,dz))*log(dot(z,z));
+	float d = 0.5 * sqrt(dot(z,z)/dot(dz,dz)) * log(dot(z,z));
     // if( di>0.5 ) d=0.0;
 	
     return d;
 }
 
 void main() {
- vec2 p = (2.0*gl_FragCoord.xy-uResolution.xy)/uResolution.y;
+  vec2 p = gl_FragCoord.xy / uResolution;
+  p -= 0.5;
 
     // animation	
 	float tz = 0.5 - 0.5*cos(0.225*uTime);
-    float zoo = pow( 0.5, 13.0*tz );
+  float zoo = pow( 0.5, 15.0*tz );
+    // float zoo = 1.0;
 	vec2 c = vec2(-0.05,.6805) + p*zoo;
 
-    // distance to Mandelbrot
-    float d = distanceToMandelbrot(c);
-    
-    // do some soft coloring based on distance
-	d = clamp( pow(4.0*d/zoo,0.2), 0.0, 1.0 );    
-    
+  // distance to Mandelbrot
+  float d = distanceToMandelbrot(c);
+      
+  // do some soft coloring based on distance
+  d = clamp(pow(4.0 * d / zoo, 0.2), 0.0, 1.0);
+      
   vec3 col = vec3(d);
-    
+      
   gl_FragColor = vec4( col, 1.0 );
 }
