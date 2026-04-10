@@ -411,6 +411,12 @@ export const examples: ExampleInfo[] = [
     path: "/src/examples/64-spirit/index.html",
   },
   {
+    id: "65-spirit-review",
+    name: "65. The Spirit Review",
+    description: "The Spirit Review",
+    path: "/src/examples/65-spirit-prac/index.html",
+  },
+  {
     id: "999-review",
     name: "Review",
     description: "Review",

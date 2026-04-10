@@ -1,5 +1,4 @@
-// chunk(common);
-// chunk(fog_pars_vertex);
+#include <fog_pars_vertex>
 
 uniform sampler2D texturePosition;
 
@@ -24,6 +23,6 @@ void main() {
     gl_Position = projectionMatrix * mvPosition;
     worldPosition = cameraMatrix * mvPosition;
 
-    // chunk(fog_vertex);
+    #include <fog_vertex>
 
 }

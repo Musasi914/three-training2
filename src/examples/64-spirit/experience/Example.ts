@@ -1,9 +1,7 @@
 import Experience from "./Experience";
 import * as THREE from "three";
-import { UniformsLib, UniformsUtils } from "three";
-import trianglesVertRaw from "./glsl/triangles.vert";
-import particlesFragRaw from "./glsl/particles.frag";
-import { parseSpiritShader } from "./spiritShaderParse";
+import trianglesVert from "./glsl/triangles.vert";
+import particlesFrag from "./glsl/particles.frag";
 import {
   SIM_TEXTURE_HEIGHT,
   SIM_TEXTURE_WIDTH,
@@ -11,7 +9,7 @@ import {
 } from "./SpiritSimulator";
 
 /** 床の初期色（元 floor.js の color と同じ） */
-const FLOOR_INITIAL = 0xccccc;
+const FLOOR_INITIAL = 0x77777;
 
 export default class Example {
   experience: Experience;
@@ -135,9 +133,8 @@ export default class Example {
     geometry.setAttribute("fboUV", new THREE.BufferAttribute(fboUV, 2));
 
     const material = new THREE.ShaderMaterial({
-      uniforms: UniformsUtils.merge([
-        UniformsLib.common,
-        UniformsLib.fog,
+      uniforms: THREE.UniformsUtils.merge([
+        THREE.UniformsLib["fog"],
         {
           texturePosition: { value: null },
           flipRatio: { value: 0 },
@@ -146,8 +143,8 @@ export default class Example {
           cameraMatrix: { value: new THREE.Matrix4() },
         },
       ]),
-      vertexShader: parseSpiritShader(trianglesVertRaw),
-      fragmentShader: parseSpiritShader(particlesFragRaw),
+      vertexShader: trianglesVert,
+      fragmentShader: particlesFrag,
       fog: true,
     });
 
@@ -172,13 +169,13 @@ export default class Example {
     this.pointLight = pointLight;
     group.add(pointLight);
 
-    const d1 = new THREE.DirectionalLight(0xba8b8b, 0.5);
-    d1.position.set(1, 1, 1);
-    group.add(d1);
+    // const d1 = new THREE.DirectionalLight(0xba8b8b, 0.5);
+    // d1.position.set(1, 1, 1);
+    // group.add(d1);
 
-    const d2 = new THREE.DirectionalLight(0x8bbab4, 0.3);
-    d2.position.set(1, 1, -1);
-    group.add(d2);
+    // const d2 = new THREE.DirectionalLight(0x8bbab4, 0.3);
+    // d2.position.set(1, 1, -1);
+    // group.add(d2);
 
     return group;
   }

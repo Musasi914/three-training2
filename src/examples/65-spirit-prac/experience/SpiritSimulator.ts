@@ -1,48 +1,36 @@
 import * as THREE from "three";
-import quadVert from "./glsl/quad.vert";
+import fullScreenVert from "./glsl/fullScreen.vert";
 import throughFrag from "./glsl/through.frag";
 import positionSimFrag from "./glsl/positionSim.frag";
 
-/** The-Spirit 256×256 */
 export const SIM_TEXTURE_WIDTH = 256;
 export const SIM_TEXTURE_HEIGHT = 256;
 export const SIM_AMOUNT = SIM_TEXTURE_WIDTH * SIM_TEXTURE_HEIGHT;
 
-export type SpiritSimUniforms = {
-  speed: number;
-  dieSpeed: number;
-  radius: number;
-  curlSize: number;
-  attraction: number;
-};
-
-export class SpiritSimulator {
+export default class SpiritSimulator {
   renderer: THREE.WebGLRenderer;
-  scene = new THREE.Scene();
-  camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-  mesh: THREE.Mesh;
+  camera: THREE.OrthographicCamera;
+  scene: THREE.Scene;
+  mesh: THREE.Mesh<THREE.PlaneGeometry, THREE.ShaderMaterial>;
 
   copyMaterial: THREE.ShaderMaterial;
   positionMaterial: THREE.ShaderMaterial;
 
-  positionRenderTarget!: THREE.WebGLRenderTarget;
-  prevPositionRenderTarget!: THREE.WebGLRenderTarget;
-  textureDefaultPosition!: THREE.DataTexture;
+  positionRenderTarget: THREE.WebGLRenderTarget;
+  prevPositionRenderTarget: THREE.WebGLRenderTarget;
 
-  initAnimation = 0;
+  defaultPositionTexture: THREE.DataTexture;
 
-  readonly uniforms: SpiritSimUniforms = {
+  readonly uniforms = {
     speed: 1,
     dieSpeed: 0.015,
-    radius: 0.6,
-    curlSize: 0.02,
-    attraction: 1,
   };
-
   mouse3d = new THREE.Vector3();
 
   constructor(renderer: THREE.WebGLRenderer) {
     this.renderer = renderer;
+    this.camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+    this.scene = new THREE.Scene();
 
     this.copyMaterial = new THREE.ShaderMaterial({
       uniforms: {
@@ -51,7 +39,7 @@ export class SpiritSimulator {
         },
         uTex: { value: null },
       },
-      vertexShader: quadVert,
+      vertexShader: fullScreenVert,
       fragmentShader: throughFrag,
       depthTest: false,
       depthWrite: false,
@@ -66,14 +54,13 @@ export class SpiritSimulator {
         textureDefaultPosition: { value: null },
         mouse3d: { value: new THREE.Vector3() },
         speed: { value: 1 },
-        dieSpeed: { value: 0 },
+        dieSpeed: { value: 0.015 },
         radius: { value: 0.6 },
         curlSize: { value: 0.02 },
         attraction: { value: 1 },
         time: { value: 0 },
-        initAnimation: { value: 0 },
       },
-      vertexShader: quadVert,
+      vertexShader: fullScreenVert,
       fragmentShader: positionSimFrag,
       depthTest: false,
       depthWrite: false,
@@ -85,37 +72,38 @@ export class SpiritSimulator {
     );
     this.scene.add(this.mesh);
 
-    const rtOpts: THREE.RenderTargetOptions = {
-      wrapS: THREE.ClampToEdgeWrapping,
-      wrapT: THREE.ClampToEdgeWrapping,
-      minFilter: THREE.NearestFilter,
-      magFilter: THREE.NearestFilter,
-      format: THREE.RGBAFormat,
-      type: THREE.FloatType,
-      depthBuffer: false,
-      stencilBuffer: false,
-    };
-
     this.positionRenderTarget = new THREE.WebGLRenderTarget(
       SIM_TEXTURE_WIDTH,
       SIM_TEXTURE_HEIGHT,
-      rtOpts
+      {
+        minFilter: THREE.NearestFilter,
+        magFilter: THREE.NearestFilter,
+        type: THREE.FloatType,
+        depthBuffer: false,
+      }
     );
     this.prevPositionRenderTarget = this.positionRenderTarget.clone();
 
-    this.textureDefaultPosition = this.createDefaultPositionTexture();
-    this.copyTexture(this.textureDefaultPosition, this.positionRenderTarget);
-    this.copyTexture(
-      this.positionRenderTarget.texture,
-      this.prevPositionRenderTarget
-    );
+    this.defaultPositionTexture = this.createDefaultPositionTexture();
+
+    // 2枚のレンダーターゲットを最初から同じ初期状態で埋める
+    this.copyMaterial.uniforms.uTex.value = this.defaultPositionTexture;
+    this.renderer.setRenderTarget(this.positionRenderTarget);
+    this.renderer.render(this.scene, this.camera);
+    this.renderer.setRenderTarget(null);
+
+    this.copyMaterial.uniforms.uTex.value = this.positionRenderTarget.texture;
+    this.renderer.setRenderTarget(this.prevPositionRenderTarget);
+    this.renderer.render(this.scene, this.camera);
+    this.renderer.setRenderTarget(null);
   }
 
-  private createDefaultPositionTexture(): THREE.DataTexture {
+  private createDefaultPositionTexture() {
     const positions = new Float32Array(SIM_AMOUNT * 4);
+
     for (let i = 0; i < SIM_AMOUNT; i++) {
       const i4 = i * 4;
-      const r = (0.5 + Math.random() * 0.5) * 50;
+      const r = (0.5 + Math.random() * 0.5) * 50; // 25~50
       const phi = (Math.random() - 0.5) * Math.PI;
       const theta = Math.random() * Math.PI * 2;
       positions[i4 + 0] = r * Math.cos(theta) * Math.cos(phi);
@@ -123,6 +111,7 @@ export class SpiritSimulator {
       positions[i4 + 2] = r * Math.sin(theta) * Math.cos(phi);
       positions[i4 + 3] = Math.random();
     }
+
     const texture = new THREE.DataTexture(
       positions,
       SIM_TEXTURE_WIDTH,
@@ -137,28 +126,8 @@ export class SpiritSimulator {
     return texture;
   }
 
-  private copyTexture(
-    input: THREE.Texture,
-    output: THREE.WebGLRenderTarget
-  ): void {
-    this.mesh.material = this.copyMaterial;
-    this.copyMaterial.uniforms.uTex.value = input;
-    this.renderer.setRenderTarget(output);
-    this.renderer.render(this.scene, this.camera);
-    this.renderer.setRenderTarget(null);
-  }
-
-  update(dtMs: number): void {
-    const u = this.uniforms;
-    if (!(u.speed || u.dieSpeed)) return;
-
+  update(dtMs: number) {
     const deltaRatio = dtMs / (1000 / 60);
-    const prevClear = new THREE.Color();
-    this.renderer.getClearColor(prevClear);
-    const prevAlpha = this.renderer.getClearAlpha();
-    const autoClear = this.renderer.autoClear;
-
-    this.renderer.autoClear = false;
 
     const tmp = this.positionRenderTarget;
     this.positionRenderTarget = this.prevPositionRenderTarget;
@@ -166,31 +135,22 @@ export class SpiritSimulator {
 
     this.mesh.material = this.positionMaterial;
     this.positionMaterial.uniforms.textureDefaultPosition.value =
-      this.textureDefaultPosition;
+      this.defaultPositionTexture;
     this.positionMaterial.uniforms.texturePosition.value =
       this.prevPositionRenderTarget.texture;
-    this.positionMaterial.uniforms.speed.value = u.speed * deltaRatio;
-    this.positionMaterial.uniforms.dieSpeed.value = u.dieSpeed * deltaRatio;
-    this.positionMaterial.uniforms.radius.value = u.radius;
-    this.positionMaterial.uniforms.curlSize.value = u.curlSize;
-    this.positionMaterial.uniforms.attraction.value = u.attraction;
-    this.positionMaterial.uniforms.initAnimation.value = this.initAnimation;
+    this.positionMaterial.uniforms.speed.value =
+      this.uniforms.speed * deltaRatio;
+    this.positionMaterial.uniforms.dieSpeed.value =
+      this.uniforms.dieSpeed * deltaRatio;
     this.positionMaterial.uniforms.mouse3d.value.copy(this.mouse3d);
     this.positionMaterial.uniforms.time.value += dtMs * 0.001;
 
     this.renderer.setRenderTarget(this.positionRenderTarget);
     this.renderer.render(this.scene, this.camera);
     this.renderer.setRenderTarget(null);
-
-    this.renderer.setClearColor(prevClear, prevAlpha);
-    this.renderer.autoClear = autoClear;
   }
 
   get positionTexture(): THREE.Texture {
     return this.positionRenderTarget.texture;
-  }
-
-  get prevPositionTexture(): THREE.Texture {
-    return this.prevPositionRenderTarget.texture;
   }
 }

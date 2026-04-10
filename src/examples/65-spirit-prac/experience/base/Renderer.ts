@@ -1,0 +1,77 @@
+import {
+  EffectComposer,
+  RenderPass,
+  UnrealBloomPass,
+} from "three/examples/jsm/Addons.js";
+import Experience from "../Experience";
+import * as THREE from "three";
+
+export class Renderer {
+  instance: THREE.WebGLRenderer;
+  experience: Experience;
+  canvasWrapper: Experience["canvasWrapper"];
+  config: Experience["config"];
+  composer: EffectComposer;
+
+  constructor() {
+    this.experience = Experience.getInstance();
+    this.canvasWrapper = this.experience.canvasWrapper;
+    this.config = this.experience.config;
+
+    this.instance = this.setInstance();
+
+    const renderTarget = new THREE.WebGLRenderTarget(
+      this.config.width,
+      this.config.height,
+      {
+        samples: this.config.pixelRatio === 1 ? 2 : 0,
+      }
+    );
+    this.composer = new EffectComposer(this.instance, renderTarget);
+    this.composer.setPixelRatio(this.config.pixelRatio);
+    this.composer.setSize(this.config.width, this.config.height);
+    this.composer.addPass(
+      new RenderPass(this.experience.scene, this.experience.camera.instance)
+    );
+
+    const bloomPass = new UnrealBloomPass(
+      new THREE.Vector2(
+        this.config.width * this.config.pixelRatio,
+        this.config.height * this.config.pixelRatio
+      ),
+      0.8,
+      0.1,
+      1.1
+    );
+    this.composer.addPass(bloomPass);
+  }
+
+  private setInstance() {
+    const renderer = new THREE.WebGLRenderer({
+      alpha: false,
+      antialias: true,
+    });
+
+    this.canvasWrapper.appendChild(renderer.domElement);
+    renderer.setClearColor(0x333333, 1);
+    renderer.setPixelRatio(this.config.pixelRatio);
+    renderer.setSize(this.config.width, this.config.height);
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 0.85;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    return renderer;
+  }
+
+  resize() {
+    this.config = this.experience.config;
+    this.instance.setPixelRatio(this.config.pixelRatio);
+    this.instance.setSize(this.config.width, this.config.height);
+    this.composer.setPixelRatio(this.config.pixelRatio);
+    this.composer.setSize(this.config.width, this.config.height);
+  }
+
+  update() {
+    this.composer.render(this.experience.time.delta);
+  }
+}
